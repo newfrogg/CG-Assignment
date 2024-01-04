@@ -1,0 +1,1 @@
+g++ -g main.cpp -std=c++11 src/*.cpp -lGL -lGLU -lglut -lm -Iinclude -Isrc -o main
