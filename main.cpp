@@ -73,7 +73,7 @@ void myInit()
 	glOrtho(-fHalfSize, fHalfSize, -fHalfSize, fHalfSize, -1000, 1000);
 }
 
-int main(int argc, char **argv[])
+int main(int argc, char *argv[])
 {
 	cout << "1. Tetrahedron" << endl;
 	cout << "2. Cube" << endl;
