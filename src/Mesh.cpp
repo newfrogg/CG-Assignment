@@ -202,7 +202,7 @@ void Mesh::CreateTetrahedron()
 		face[3].vert[i].colorIndex = 3;
 }
 
-void Mesh::CreateBar(float fHeight, float fShortWidth, float fLongWidth, float fLength)
+void Mesh::CreateTrapezium(float fHeight, float fShortWidth, float fLongWidth, float fLength)
 {
 	int i;
 	numVerts = 8;

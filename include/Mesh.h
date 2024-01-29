@@ -69,7 +69,7 @@ public:
 	void CreateTetrahedron();
 	void CreateCube(float fSize);
 	void CreateCylinder(int nSegment, float fHeight, float fRadius);
-	void CreateBar(float fHeight, float fShortWidth, float fLongWidth, float fLength);
+	void CreateTrapezium(float fHeight, float fShortWidth, float fLongWidth, float fLength);
 };
 
 #endif
