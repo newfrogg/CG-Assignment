@@ -1,18 +1,26 @@
 #include <math.h>
 #include <iostream>
+#include <vector>
 #include "supportClass.h"
 #include "Mesh.h"
+#include "matrix.h"
 
 using namespace std;
 
-int screenWidth = 600;
-int screenHeight = 300;
+int screenWidth = 1080;
+int screenHeight = 480;
 
 Mesh tetrahedron;
 Mesh cube;
 Mesh shape1;
+Mesh temp;
+Mesh shape2;
+Mesh cylinder;
 
 int nChoice;
+float eyeX = 4.5;
+float eyeY = 4;
+float eyeZ = 2;
 
 // Opengl coordinate convention
 // x-axis extends to the right
@@ -22,17 +30,17 @@ void drawAxis()
 {
 	glBegin(GL_LINES);
 	{
-		glColor3f(1, 0, 0);
+		glColor3f(1, 0, 0); // red
 		glVertex3f(0, 0, 0);
 		glVertex3f(4, 0, 0);
 	}
 	{
-		glColor3f(0, 1, 0);
+		glColor3f(0, 1, 0); // green
 		glVertex3f(0, 0, 0);
 		glVertex3f(0, 4, 0);
 	}
 	{
-		glColor3f(0, 0, 1);
+		glColor3f(0, 0, 1); // blue
 		glVertex3f(0, 0, 0);
 		glVertex3f(0, 0, 4);
 	}
@@ -49,7 +57,11 @@ void myDisplay()
 	// diagonal elements are 1 and others are 0
 	glLoadIdentity();
 	// (Eye, center, up)
-	gluLookAt(4.5, 4, 3, 0, 0, 0, 0, 1, 0);
+	gluLookAt(
+		eyeX,
+		eyeY,
+		eyeZ,
+		0, 0, 0, 0, 1, 0);
 	// Clear buffers to prepare for rendering new frame
 	// just only glEnable(GL_DEPTH_TEST) have been enabled before so that the following for depth need being called
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -60,10 +72,16 @@ void myDisplay()
 		glColor3f(0, 0, 0);
 		if (nChoice == 1)
 			tetrahedron.DrawWireframe();
+		else if (nChoice == 0)
+			cylinder.DrawWireframe();
 		else if (nChoice == 2)
 			cube.DrawWireframe();
 		else if (nChoice == 3)
 			shape1.DrawWireframe();
+		else if (nChoice == 4)
+			temp.DrawWireframe();
+		else if (nChoice == 5)
+			shape2.DrawWireframe();
 	}
 
 	glViewport(screenWidth / 2, 0, screenWidth / 2, screenHeight);
@@ -71,14 +89,56 @@ void myDisplay()
 		drawAxis();
 		if (nChoice == 1)
 			tetrahedron.DrawColor();
+		else if (nChoice == 0)
+			cylinder.DrawColor();
 		else if (nChoice == 2)
 			cube.DrawColor();
 		else if (nChoice == 3)
 			shape1.DrawColor();
+		else if (nChoice == 4)
+			temp.DrawColor();
+		else if (nChoice == 5)
+			shape2.DrawColor();
 	}
 	// Perform rendering operations
 	glFlush();
 	glutSwapBuffers();
+}
+
+void keyboardCallback(unsigned char key, int x, int y)
+{
+	if (key == 27)
+	{
+		printf("[LOG::RESULT] Program exit successfully.\n");
+		exit(0);
+	}
+
+	switch (key)
+	{
+	case '+':
+		eyeZ += 0.1f;
+		break;
+	case '-':
+		eyeZ -= 0.1f;
+		break;
+	case 'a':
+		eyeX -= 0.1f;
+		break;
+	case 'd':
+		eyeX += 0.1f;
+		break;
+	case 'w':
+		eyeY += 0.1f;
+		break;
+	case 's':
+		eyeY -= 0.1f;
+		break;
+	default:
+		break;
+	}
+	glutPostRedisplay();
+	printf("[LOG:::BUTTON] button[%c] is pressed.\n", key);
+	printf("[LOG:::COORDINATE] eyeX = %f, eyeY = %f, eyeZ = %f\n", eyeX, eyeY, eyeZ);
 }
 
 void myInit()
@@ -102,7 +162,7 @@ void myInit()
 
 int main(int argc, char *argv[])
 {
-	nChoice = 3;
+	nChoice = 4;
 
 	glutInit(&argc, (char **)argv);							  // initialize the tool kit
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH); // set the display mode
@@ -112,11 +172,19 @@ int main(int argc, char *argv[])
 
 	tetrahedron.CreateTetrahedron();
 	cube.CreateCube(1);
-	shape1.CreateBar(1, 1, 2, 3.5);
-
+	shape1.CreateTrapezium(1, 1 + 0.2, 2, 4);
+	// temp.CreatCrossBase(0, 1, 0.5, 1, 0.3, 0.4, 4);
+	temp.CreatCrossBasev2(1, 0.5, 1, 0.3, 0.4, 4);
+	// shape2.CreateHandle(1.5, 3, 0.3, 0.8, 0.8, 0.4, 0.4, 0.4);
+	// cylinder.CreateCylinder(4, 3, 0.5);
+	// Init opengl environment
 	myInit();
+	// Setup the keyboard function triggering callback
+	glutKeyboardFunc(keyboardCallback);
+	// Function to display main presentation
 	glutDisplayFunc(myDisplay);
 
 	glutMainLoop();
+
 	return 0;
 }

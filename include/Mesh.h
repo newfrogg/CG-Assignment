@@ -2,7 +2,9 @@
 #define _MESH_CLASS
 
 #include "supportClass.h"
-
+/*
+Reference: https://www.instructables.com/Trammel-of-Archimedes-3D-Print/
+*/
 class VertexID
 {
 public:
@@ -69,7 +71,36 @@ public:
 	void CreateTetrahedron();
 	void CreateCube(float fSize);
 	void CreateCylinder(int nSegment, float fHeight, float fRadius);
+	/*
+	Example: shape1.CreateTrapezium(1, 1 + 0.2, 2, 4);
+
+	@param fShortWidth top of trapezium
+	@param fLongWitdh bottom of trapezium
+	*/
 	void CreateTrapezium(float fHeight, float fShortWidth, float fLongWidth, float fLength);
+
+	void CreateHandle(float fLengthX, float fLengthZ, float fHeight, float fWidthX, float fWidthZ, float fRadiusX, float fRadiusY, float fRadiusZ);
+	/*
+	@param quarter with 0(z>0) 1(x>0) 2(z<0) 3 (x<0)
+	@param fMainHeight 
+	@param fGrooveHeight
+	@param fMainWidth
+	@param fSubWidth
+	@param fGrooveWidth
+	@param fLength
+	*/
+	void CreatCrossBase(int quarter, float fMainHeight, float fGrooveHeight, float fMainWidth, float fSubWidth, float fGrooveWidth, float fLength);
+
+	/*
+	@param quarter with 0(z>0) 1(x>0) 2(z<0) 3 (x<0)
+	@param fMainHeight 
+	@param fGrooveHeight
+	@param fMainWidth
+	@param fSubWidth
+	@param fGrooveWidth
+	@param fLength
+	*/
+	void CreatCrossBasev2(float fMainHeight, float fGrooveHeight, float fMainWidth, float fSubWidth, float fGrooveWidth, float fLength);
 };
 
 #endif
