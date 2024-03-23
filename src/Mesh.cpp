@@ -931,7 +931,6 @@ void Mesh::CreatCrossBasev2(float fMainHeight, float fGrooveHeight, float fMainW
 		face[fei].vert[3].vertIndex = 6 * quarter_bot_and_top + 4;
 		fei++;
 	}
-
 	for (int quarter = 0; quarter < 4; quarter++)
 	{
 		face[fei].nVerts = 4;
@@ -977,7 +976,6 @@ void Mesh::CreatCrossBasev2(float fMainHeight, float fGrooveHeight, float fMainW
 		face[fei].vert[3].vertIndex = 6 * (quarter + 4) + 5;
 		fei++;
 	}
-
 	/*
 	SHAPE 2 FACES
 	*/
@@ -1067,7 +1065,7 @@ void Mesh::CreatCrossBasev2(float fMainHeight, float fGrooveHeight, float fMainW
 		fei++;
 	}
 	/*
-		ADDITION CENTER FOR TOP & BOTTOM SIDE
+	ADDITION CENTER FOR TOP & BOTTOM SIDE
 	*/
 	face[fei].nVerts = 4;
 	face[fei].vert = new VertexID[face[fei].nVerts];
@@ -1083,7 +1081,7 @@ void Mesh::CreatCrossBasev2(float fMainHeight, float fGrooveHeight, float fMainW
 	face[fei].vert[2].vertIndex = 50 + 4 * 2 + 5;
 	face[fei].vert[3].vertIndex = 50 + 4 * 2 + 4;
 
-	printf("Num of faces: siuuuu%d\n", fei);
+	printf("Num of faces: %d\n", fei);
 }
 
 void Mesh::DrawWireframe()
