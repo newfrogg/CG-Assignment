@@ -80,6 +80,87 @@ void Mesh::CreateCylinder(int nSegment, float fHeight, float fRadius)
 	}
 }
 
+void Mesh::CreateCylinderModified(float center_x, float center_y, float center_z, int nSegment, float fHeight, float fRadius)
+{
+	////////////////////////////////////////////////////////////////////////
+	//////  COMMON SIZE PARAMETERS
+	////////////////////////////////////////////////////////////////////////
+	float __center_x = center_x;
+	float __center_y = center_y;
+	float __center_z = center_z;
+
+
+	numVerts = nSegment * 2 + 2;
+	pt = new Point3[numVerts];
+
+	int i;
+	int idx;
+	float fAngle = 2 * PI / nSegment;
+	float x, y, z;
+
+	pt[0].set(__center_x, fHeight / 2 + __center_y, __center_z);
+	// chi toi nsegment vi day la hinh cung kin (diem dau == diem cuoi)
+	for (i = 0; i < nSegment; i++)
+	{
+		x = fRadius * cos(fAngle * i) + __center_x;
+		z = fRadius * sin(fAngle * i) + __center_z;
+		y = fHeight / 2 + __center_y;
+		pt[i + 1].set(x, y, z);
+		// printf("x = %f, y = %f, z = %f \n", x, y, z);
+
+		y = -fHeight / 2 + __center_y;
+		// printf("x = %f, y = %f, z = %f \n", x, y, z);
+		pt[i + 1 + nSegment].set(x, y, z);
+	}
+	pt[numVerts - 1].set(__center_x, -fHeight / 2 + __center_y, __center_z);
+
+	numFaces = nSegment * 3;
+	face = new Face[numFaces];
+
+	idx = 0;
+	for (i = 0; i < nSegment; i++)
+	{
+		face[idx].nVerts = 3;
+		face[idx].vert = new VertexID[face[idx].nVerts];
+		face[idx].vert[0].vertIndex = 0;
+		if (i < nSegment - 1)
+			face[idx].vert[1].vertIndex = i + 2;
+		else
+			face[idx].vert[1].vertIndex = 1;
+		face[idx].vert[2].vertIndex = i + 1;
+		idx++;
+	}
+
+	for (i = 0; i < nSegment; i++)
+	{
+		face[idx].nVerts = 4;
+		face[idx].vert = new VertexID[face[idx].nVerts];
+
+		face[idx].vert[0].vertIndex = i + 1;
+		if (i < nSegment - 1)
+			face[idx].vert[1].vertIndex = i + 2;
+		else
+			face[idx].vert[1].vertIndex = 1;
+		face[idx].vert[2].vertIndex = face[idx].vert[1].vertIndex + nSegment;
+		face[idx].vert[3].vertIndex = face[idx].vert[0].vertIndex + nSegment;
+
+		idx++;
+	}
+
+	for (i = 0; i < nSegment; i++)
+	{
+		face[idx].nVerts = 3;
+		face[idx].vert = new VertexID[face[idx].nVerts];
+		face[idx].vert[0].vertIndex = numVerts - 1;
+		if (i < nSegment - 1)
+			face[idx].vert[2].vertIndex = i + 2 + nSegment;
+		else
+			face[idx].vert[2].vertIndex = 1 + nSegment;
+		face[idx].vert[1].vertIndex = i + 1 + nSegment;
+		idx++;
+	}
+}
+
 void Mesh::CreateCube(float fSize)
 {
 	int i;
@@ -509,245 +590,7 @@ void Mesh::CreateHandle(float fLengthX, float fLengthZ, float fHeight, float fWi
 	}
 }
 
-void Mesh::CreatCrossBase(int quarter, float fMainHeight, float fGrooveHeight, float fMainWidth, float fSubWidth, float fGrooveWidth, float fLength)
-{
-	if (fMainWidth - 2 * fSubWidth - fGrooveWidth > 0.1)
-	{
-		printf("[ERROR] SubWidth and GrooveWidth don't match with MainWidth\n");
-		return;
-	}
-	int i;
-	numVerts = 20;
-	pt = new Point3[numVerts];
-
-	if (quarter == 0)
-	{
-		pt[0].set(-fGrooveWidth / 2, 0, fGrooveWidth / 2);
-		pt[1].set(-fGrooveWidth / 2 - fSubWidth, 0, fGrooveWidth / 2 + fSubWidth);
-		pt[2].set(-fGrooveWidth / 2 - fSubWidth, 0, fGrooveWidth / 2 + fLength);
-		pt[3].set(-fGrooveWidth / 2, 0, fGrooveWidth / 2 + fLength);
-		pt[4].set(fGrooveWidth / 2, 0, fGrooveWidth / 2);
-		pt[5].set(fGrooveWidth / 2 + fSubWidth, 0, fGrooveWidth / 2 + fSubWidth);
-		pt[6].set(fGrooveWidth / 2 + fSubWidth, 0, fGrooveWidth / 2 + fLength);
-		pt[7].set(fGrooveWidth / 2, 0, fGrooveWidth / 2 + fLength);
-
-		pt[10].set(-fGrooveWidth / 2, fMainHeight, fGrooveWidth / 2);
-		pt[11].set(-fGrooveWidth / 2 - fSubWidth, fMainHeight, fGrooveWidth / 2 + fSubWidth);
-		pt[12].set(-fGrooveWidth / 2 - fSubWidth, fMainHeight, fGrooveWidth / 2 + fLength);
-		pt[13].set(-fGrooveWidth / 2, fMainHeight, fGrooveWidth / 2 + fLength);
-		pt[14].set(fGrooveWidth / 2, fMainHeight, fGrooveWidth / 2);
-		pt[15].set(fGrooveWidth / 2 + fSubWidth, fMainHeight, fGrooveWidth / 2 + fSubWidth);
-		pt[16].set(fGrooveWidth / 2 + fSubWidth, fMainHeight, fGrooveWidth / 2 + fLength);
-		pt[17].set(fGrooveWidth / 2, fMainHeight, fGrooveWidth / 2 + fLength);
-
-		pt[8].set(-fGrooveWidth / 2, fGrooveHeight, fGrooveWidth / 2);
-		pt[9].set(-fGrooveWidth / 2, fGrooveHeight, fGrooveWidth / 2 + fLength);
-		pt[18].set(fGrooveWidth / 2, fGrooveHeight, fGrooveWidth / 2);
-		pt[19].set(fGrooveWidth / 2, fGrooveHeight, fGrooveWidth / 2 + fLength);
-	}
-
-	if (quarter == 1)
-	{
-		pt[0].set(fGrooveWidth / 2, 0, fGrooveWidth / 2);
-		pt[1].set(fGrooveWidth / 2 + fSubWidth, 0, fGrooveWidth / 2 + fSubWidth);
-	}
-	numFaces = 18;
-	face = new Face[numFaces];
-	// Conventionally, we have 3 blocks including 2 sub block near - far (NrBlock - FrBlock)
-	// and 1 groove block (GrBlock)
-	// each block has 6 faces => 18 faces in total
-
-	// NrBlock
-	{
-		// left face
-		face[0].nVerts = 4;
-		face[0].vert = new VertexID[face[0].nVerts];
-		face[0].vert[0].vertIndex = 0;
-		face[0].vert[1].vertIndex = 1;
-		face[0].vert[2].vertIndex = 11;
-		face[0].vert[3].vertIndex = 10;
-		for (i = 0; i < face[0].nVerts; i++)
-			face[0].vert[i].colorIndex = 0;
-
-		// right face
-		face[1].nVerts = 4;
-		face[1].vert = new VertexID[face[1].nVerts];
-		face[1].vert[0].vertIndex = 2;
-		face[1].vert[1].vertIndex = 3;
-		face[1].vert[2].vertIndex = 13;
-		face[1].vert[3].vertIndex = 12;
-		for (i = 0; i < face[1].nVerts; i++)
-			face[1].vert[i].colorIndex = 1;
-
-		// top face
-		face[2].nVerts = 4;
-		face[2].vert = new VertexID[face[2].nVerts];
-		face[2].vert[0].vertIndex = 10;
-		face[2].vert[1].vertIndex = 11;
-		face[2].vert[2].vertIndex = 12;
-		face[2].vert[3].vertIndex = 13;
-		for (i = 0; i < face[2].nVerts; i++)
-			face[2].vert[i].colorIndex = 2;
-
-		// bottom face
-		face[3].nVerts = 4;
-		face[3].vert = new VertexID[face[3].nVerts];
-		face[3].vert[0].vertIndex = 0;
-		face[3].vert[1].vertIndex = 1;
-		face[3].vert[2].vertIndex = 2;
-		face[3].vert[3].vertIndex = 3;
-		for (i = 0; i < face[3].nVerts; i++)
-			face[3].vert[i].colorIndex = 3;
-
-		// near face
-		face[4].nVerts = 4;
-		face[4].vert = new VertexID[face[4].nVerts];
-		face[4].vert[0].vertIndex = 11;
-		face[4].vert[1].vertIndex = 1;
-		face[4].vert[2].vertIndex = 2;
-		face[4].vert[3].vertIndex = 12;
-		for (i = 0; i < face[4].nVerts; i++)
-			face[4].vert[i].colorIndex = 4;
-
-		// far face
-		face[5].nVerts = 4;
-		face[5].vert = new VertexID[face[5].nVerts];
-		face[5].vert[0].vertIndex = 10;
-		face[5].vert[1].vertIndex = 0;
-		face[5].vert[2].vertIndex = 3;
-		face[5].vert[3].vertIndex = 13;
-		for (i = 0; i < face[5].nVerts; i++)
-			face[5].vert[i].colorIndex = 5;
-	}
-
-	// FrBlock
-	{
-		// right face
-		face[6].nVerts = 4;
-		face[6].vert = new VertexID[face[6].nVerts];
-		face[6].vert[0].vertIndex = 7;
-		face[6].vert[1].vertIndex = 6;
-		face[6].vert[2].vertIndex = 16;
-		face[6].vert[3].vertIndex = 17;
-		for (i = 0; i < face[6].nVerts; i++)
-			face[6].vert[i].colorIndex = 0;
-
-		// left face
-		face[7].nVerts = 4;
-		face[7].vert = new VertexID[face[7].nVerts];
-		face[7].vert[0].vertIndex = 4;
-		face[7].vert[1].vertIndex = 5;
-		face[7].vert[2].vertIndex = 15;
-		face[7].vert[3].vertIndex = 14;
-		for (i = 0; i < face[7].nVerts; i++)
-			face[7].vert[i].colorIndex = 1;
-
-		// top face
-		face[8].nVerts = 4;
-		face[8].vert = new VertexID[face[8].nVerts];
-		face[8].vert[0].vertIndex = 17;
-		face[8].vert[1].vertIndex = 14;
-		face[8].vert[2].vertIndex = 15;
-		face[8].vert[3].vertIndex = 16;
-		for (i = 0; i < face[8].nVerts; i++)
-			face[8].vert[i].colorIndex = 2;
-
-		// bottom face
-		face[9].nVerts = 4;
-		face[9].vert = new VertexID[face[9].nVerts];
-		face[9].vert[0].vertIndex = 7;
-		face[9].vert[1].vertIndex = 4;
-		face[9].vert[2].vertIndex = 5;
-		face[9].vert[3].vertIndex = 6;
-		for (i = 0; i < face[9].nVerts; i++)
-			face[9].vert[i].colorIndex = 3;
-
-		// near face
-		face[10].nVerts = 4;
-		face[10].vert = new VertexID[face[10].nVerts];
-		face[10].vert[0].vertIndex = 17;
-		face[10].vert[1].vertIndex = 7;
-		face[10].vert[2].vertIndex = 4;
-		face[10].vert[3].vertIndex = 14;
-		for (i = 0; i < face[10].nVerts; i++)
-			face[10].vert[i].colorIndex = 4;
-
-		// far face
-		face[11].nVerts = 4;
-		face[11].vert = new VertexID[face[11].nVerts];
-		face[11].vert[0].vertIndex = 15;
-		face[11].vert[1].vertIndex = 16;
-		face[11].vert[2].vertIndex = 6;
-		face[11].vert[3].vertIndex = 5;
-		for (i = 0; i < face[11].nVerts; i++)
-			face[11].vert[i].colorIndex = 5;
-	}
-
-	// GrBlock
-	{
-		// left face
-		face[12].nVerts = 4;
-		face[12].vert = new VertexID[face[12].nVerts];
-		face[12].vert[0].vertIndex = 0;
-		face[12].vert[1].vertIndex = 4;
-		face[12].vert[2].vertIndex = 18;
-		face[12].vert[3].vertIndex = 8;
-		for (i = 0; i < face[12].nVerts; i++)
-			face[12].vert[i].colorIndex = 0;
-
-		// right face
-		face[13].nVerts = 4;
-		face[13].vert = new VertexID[face[13].nVerts];
-		face[13].vert[0].vertIndex = 3;
-		face[13].vert[1].vertIndex = 7;
-		face[13].vert[2].vertIndex = 19;
-		face[13].vert[3].vertIndex = 9;
-		for (i = 0; i < face[13].nVerts; i++)
-			face[13].vert[i].colorIndex = 1;
-
-		// near face
-		face[16].nVerts = 4;
-		face[16].vert = new VertexID[face[16].nVerts];
-		face[16].vert[0].vertIndex = 3;
-		face[16].vert[1].vertIndex = 7;
-		face[16].vert[2].vertIndex = 19;
-		face[16].vert[3].vertIndex = 9;
-		for (i = 0; i < face[16].nVerts; i++)
-			face[16].vert[i].colorIndex = 2;
-
-		// far face
-		face[17].nVerts = 4;
-		face[17].vert = new VertexID[face[17].nVerts];
-		face[17].vert[0].vertIndex = 0;
-		face[17].vert[1].vertIndex = 4;
-		face[17].vert[2].vertIndex = 18;
-		face[17].vert[3].vertIndex = 8;
-		for (i = 0; i < face[17].nVerts; i++)
-			face[17].vert[i].colorIndex = 3;
-
-		// top face
-		face[14].nVerts = 4;
-		face[14].vert = new VertexID[face[14].nVerts];
-		face[14].vert[0].vertIndex = 8;
-		face[14].vert[1].vertIndex = 9;
-		face[14].vert[2].vertIndex = 19;
-		face[14].vert[3].vertIndex = 18;
-		for (i = 0; i < face[14].nVerts; i++)
-			face[14].vert[i].colorIndex = 4;
-
-		// bottom face
-		face[15].nVerts = 4;
-		face[15].vert = new VertexID[face[15].nVerts];
-		face[15].vert[0].vertIndex = 0;
-		face[15].vert[1].vertIndex = 3;
-		face[15].vert[2].vertIndex = 7;
-		face[15].vert[3].vertIndex = 4;
-		for (i = 0; i < face[15].nVerts; i++)
-			face[15].vert[i].colorIndex = 5;
-	}
-}
-
-void Mesh::CreatCrossBasev2(float fMainHeight, float fGrooveHeight, float fMainWidth, float fSubWidth, float fGrooveWidth, float fLength)
+void Mesh::CreatCrossBase(float fMainHeight, float fGrooveHeight, float fMainWidth, float fSubWidth, float fGrooveWidth, float fLength)
 {
 
 	if (fMainWidth - 2 * fSubWidth - fGrooveWidth > 0.1)

@@ -13,14 +13,21 @@ int screenHeight = 480;
 Mesh tetrahedron;
 Mesh cube;
 Mesh shape1;
-Mesh temp;
+Mesh crossBase;
 Mesh shape2;
 Mesh cylinder;
 
-int nChoice;
 float eyeX = 4.5;
 float eyeY = 4;
 float eyeZ = 2;
+
+
+
+
+
+float centerX = 1;
+float centerY = 1;
+float centerZ = 1;
 
 // Opengl coordinate convention
 // x-axis extends to the right
@@ -49,6 +56,19 @@ void drawAxis()
 
 void myDisplay()
 {
+	////////////////////////////////////////////////////////////////////////
+	//////  INIT DYNMAMIC OBJECTS (that oviously changes wihtin runtime)
+	////////////////////////////////////////////////////////////////////////
+	//////  [!!!] STATIC Objects will be initialized in MAIN function
+	////////////////////////////////////////////////////////////////////////
+	cylinder.CreateCylinderModified(centerX, centerY, centerZ, 40, 2, 0.2);
+
+	////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////
+
+
+
 	// Allowing the matrix operation applied onto current modelview matrix stack
 	// Comparing with GL_PROJECTION which is used to specify the projection transformation determining how 3d objects are
 	// projected onto 2D viewport
@@ -70,35 +90,25 @@ void myDisplay()
 	{
 		drawAxis();
 		glColor3f(0, 0, 0);
-		if (nChoice == 1)
-			tetrahedron.DrawWireframe();
-		else if (nChoice == 0)
-			cylinder.DrawWireframe();
-		else if (nChoice == 2)
-			cube.DrawWireframe();
-		else if (nChoice == 3)
-			shape1.DrawWireframe();
-		else if (nChoice == 4)
-			temp.DrawWireframe();
-		else if (nChoice == 5)
-			shape2.DrawWireframe();
+
+		tetrahedron.DrawWireframe();
+		cylinder.DrawWireframe();
+		cube.DrawWireframe();
+		shape1.DrawWireframe();
+		crossBase.DrawWireframe();
+		shape2.DrawWireframe();
 	}
 
 	glViewport(screenWidth / 2, 0, screenWidth / 2, screenHeight);
 	{
 		drawAxis();
-		if (nChoice == 1)
-			tetrahedron.DrawColor();
-		else if (nChoice == 0)
-			cylinder.DrawColor();
-		else if (nChoice == 2)
-			cube.DrawColor();
-		else if (nChoice == 3)
-			shape1.DrawColor();
-		else if (nChoice == 4)
-			temp.DrawColor();
-		else if (nChoice == 5)
-			shape2.DrawColor();
+
+		tetrahedron.DrawColor();
+		cylinder.DrawColor();
+		cube.DrawColor();
+		shape1.DrawColor();
+		crossBase.DrawColor();
+		shape2.DrawColor();
 	}
 	// Perform rendering operations
 	glFlush();
@@ -109,12 +119,21 @@ void keyboardCallback(unsigned char key, int x, int y)
 {
 	if (key == 27)
 	{
-		printf("[LOG::RESULT] Program exit successfully.\n");
+		printf("[LOG::RESULT] Program exited successfully.\n");
 		exit(0);
 	}
 
 	switch (key)
 	{
+	case 'x':
+		centerX -= 0.1f;
+		break;
+	case 'y':
+		centerY -= 0.1f;
+		break;
+	case 'z':
+		centerZ -= 0.1f;
+		break;
 	case '+':
 		eyeZ += 0.1f;
 		break;
@@ -138,7 +157,8 @@ void keyboardCallback(unsigned char key, int x, int y)
 	}
 	glutPostRedisplay();
 	printf("[LOG:::BUTTON] button[%c] is pressed.\n", key);
-	printf("[LOG:::COORDINATE] eyeX = %f, eyeY = %f, eyeZ = %f\n", eyeX, eyeY, eyeZ);
+	// printf("[LOG:::COORDINATE] eyeX = %f, eyeY = %f, eyeZ = %f\n", eyeX, eyeY, eyeZ);
+	printf("[LOG:::COORDINATE] CenterX = %f, CenterY = %f, CenterZ = %f\n", centerX, centerY, centerZ);
 }
 
 void myInit()
@@ -162,21 +182,22 @@ void myInit()
 
 int main(int argc, char *argv[])
 {
-	nChoice = 4;
-
 	glutInit(&argc, (char **)argv);							  // initialize the tool kit
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH); // set the display mode
 	glutInitWindowSize(screenWidth, screenHeight);			  // set window size
 	glutInitWindowPosition(100, 100);						  // set window position on screen
 	glutCreateWindow("Lab 2");								  // open the screen window
 
-	tetrahedron.CreateTetrahedron();
-	cube.CreateCube(1);
-	shape1.CreateTrapezium(1, 1 + 0.2, 2, 4);
-	// temp.CreatCrossBase(0, 1, 0.5, 1, 0.3, 0.4, 4);
-	temp.CreatCrossBasev2(1, 0.5, 1, 0.3, 0.4, 4);
-	// shape2.CreateHandle(1.5, 3, 0.3, 0.8, 0.8, 0.4, 0.4, 0.4);
-	// cylinder.CreateCylinder(4, 3, 0.5);
+	////////////////////////////////////////////////////////////////////////
+	//////  INIT STATIC OBJECTS (that not changes wihtin runtime)
+	////////////////////////////////////////////////////////////////////////
+	//////  [!!!] DYNAMIC Objects will be initialized in mydisplay function
+	////////////////////////////////////////////////////////////////////////
+	crossBase.CreatCrossBase(1, 0.5, 1, 0.3, 0.4, 4);
+	// tetrahedron.CreateTetrahedron();
+	// cube.CreateCube(1);
+	// shape1.CreateTrapezium(1, 1 + 0.2, 2, 4);
+
 	// Init opengl environment
 	myInit();
 	// Setup the keyboard function triggering callback

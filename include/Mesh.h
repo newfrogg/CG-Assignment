@@ -71,6 +71,8 @@ public:
 	void CreateTetrahedron();
 	void CreateCube(float fSize);
 	void CreateCylinder(int nSegment, float fHeight, float fRadius);
+
+	void CreateCylinderModified(float center_x, float center_y, float center_z, int nSegment, float fHeight, float fRadius);
 	/*
 	Example: shape1.CreateTrapezium(1, 1 + 0.2, 2, 4);
 
@@ -82,25 +84,14 @@ public:
 	void CreateHandle(float fLengthX, float fLengthZ, float fHeight, float fWidthX, float fWidthZ, float fRadiusX, float fRadiusY, float fRadiusZ);
 	/*
 	@param quarter with 0(z>0) 1(x>0) 2(z<0) 3 (x<0)
-	@param fMainHeight 
+	@param fMainHeight
 	@param fGrooveHeight
 	@param fMainWidth
 	@param fSubWidth
 	@param fGrooveWidth
 	@param fLength
 	*/
-	void CreatCrossBase(int quarter, float fMainHeight, float fGrooveHeight, float fMainWidth, float fSubWidth, float fGrooveWidth, float fLength);
-
-	/*
-	@param quarter with 0(z>0) 1(x>0) 2(z<0) 3 (x<0)
-	@param fMainHeight 
-	@param fGrooveHeight
-	@param fMainWidth
-	@param fSubWidth
-	@param fGrooveWidth
-	@param fLength
-	*/
-	void CreatCrossBasev2(float fMainHeight, float fGrooveHeight, float fMainWidth, float fSubWidth, float fGrooveWidth, float fLength);
+	void CreatCrossBase(float fMainHeight, float fGrooveHeight, float fMainWidth, float fSubWidth, float fGrooveWidth, float fLength);
 };
 
 #endif
