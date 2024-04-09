@@ -23,6 +23,7 @@ const int screenHeight = 650;
 //////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
+float	m_angle = 0.0;
 
 void init()
 {
@@ -61,6 +62,7 @@ void setLight()
 	glEnable(GL_LIGHT1);
 }
 
+
 void display()
 {
 	glClearColor(1.0, 1.0, 1.0, 0.0);
@@ -82,14 +84,26 @@ void display()
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
 	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shiness);
 
-	glutSolidSphere(1.0, 100, 100);
+    glPushMatrix();
+    glRotatef(m_angle, 0, 0, 1);
+
+	// glutSolidSphere(1.0, 100, 100);
+    glutSolidTeapot(1);
+    glPopMatrix();
 
 	glutSwapBuffers();
 	glFlush();
 
 	glFlush();
 }
-
+void myIdle()
+{
+	float	dt = 0.02;
+	m_angle = m_angle + dt;
+	if(m_angle >= 360)
+		m_angle = 0;
+	display();
+}
 int main(int argc, char *argv[])
 {
 	glutInit(&argc, (char **)argv);							  // initialize the tool kit
@@ -99,7 +113,7 @@ int main(int argc, char *argv[])
 	glutCreateWindow("Lab Lighting - Bai 2");				  // open the screen window
 
 	glutDisplayFunc(display);
-
+    glutIdleFunc(myIdle);
 	init();
 	glEnable(GL_DEPTH_TEST);
 

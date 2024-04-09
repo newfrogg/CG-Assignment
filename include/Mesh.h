@@ -83,7 +83,6 @@ public:
 
 	void CreateHandle(float fLengthX, float fLengthZ, float fHeight, float fWidthX, float fWidthZ, float fRadiusX, float fRadiusY, float fRadiusZ);
 	/*
-	@param quarter with 0(z>0) 1(x>0) 2(z<0) 3 (x<0)
 	@param fMainHeight
 	@param fGrooveHeight
 	@param fMainWidth

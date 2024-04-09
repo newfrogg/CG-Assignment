@@ -89,7 +89,6 @@ void Mesh::CreateCylinderModified(float center_x, float center_y, float center_z
 	float __center_y = center_y;
 	float __center_z = center_z;
 
-
 	numVerts = nSegment * 2 + 2;
 	pt = new Point3[numVerts];
 
@@ -957,6 +956,7 @@ void Mesh::DrawColor()
 			ic = f % COLORNUM;
 
 			glColor3f(ColorArr[ic][0], ColorArr[ic][1], ColorArr[ic][2]);
+			// glColor3f(0, 1, 0); // green
 			glVertex3f(pt[iv].x, pt[iv].y, pt[iv].z);
 		}
 		glEnd();
