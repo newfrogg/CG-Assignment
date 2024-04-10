@@ -17,6 +17,7 @@ class Face
 public:
 	int nVerts;
 	VertexID *vert;
+	Vector3 facenorm;
 
 	Face()
 	{
@@ -67,6 +68,9 @@ public:
 	}
 	void DrawWireframe();
 	void DrawColor();
+	void CalculateFacesNorm();
+	void Draw();
+
 	void DrawColorCrossBase();
 	void DrawColorLatchCylinder();
 	void DrawColorTieBar();

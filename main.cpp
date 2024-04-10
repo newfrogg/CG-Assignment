@@ -25,7 +25,7 @@ int screenWidth = 1080;
 int screenHeight = 720;
 
 colorMode e_colorMode = Colored;
-cameraMode e_cameraMode = __2D;
+cameraMode e_cameraMode = __3D;
 
 /// Mesh of Objects
 Mesh crossBase;
@@ -99,6 +99,64 @@ void drawAxis()
 	glEnd();
 }
 
+void setMaterial(float ar, float ag, float ab,
+				 float dr, float dg, float db,
+				 float sr, float sg, float sb)
+{
+	GLfloat ambient[4];
+	GLfloat diffuse[4];
+	GLfloat specular[4];
+	GLfloat shiness = 100.8;
+
+	ambient[0] = ar;
+	ambient[1] = ag;
+	ambient[2] = ab;
+	ambient[3] = 1;
+	diffuse[0] = dr;
+	diffuse[1] = dg;
+	diffuse[2] = db;
+	diffuse[3] = 1;
+	specular[0] = sr;
+	specular[1] = sg;
+	specular[2] = sb;
+	specular[3] = 1;
+
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambient);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
+	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shiness);
+}
+void setLight()
+{
+	const GLfloat leftLightDiffColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
+	const GLfloat leftLightSpecColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
+	const GLfloat leftLightAmbColor[] = {0.1f, 0.1f, 0.1f, 1.0f};
+	const GLfloat leftLightPos[] = {0.0, 0.0, -1.0, 0.0};
+
+	const GLfloat rightLightDiffColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
+	const GLfloat rightLightSpecColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
+	const GLfloat rightLightAmbColor[] = {0.1f, 0.1f, 0.1f, 1.0f};
+	const GLfloat rightLightPos[] = {0.0, 0.0, 1.0, 0.0};
+
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_LIGHTING);
+	glEnable(GL_NORMALIZE);
+
+	// set up right light
+	glLightfv(GL_LIGHT0, GL_POSITION, rightLightPos);
+	glLightfv(GL_LIGHT0, GL_AMBIENT, rightLightAmbColor);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, rightLightDiffColor);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, rightLightSpecColor);
+	glEnable(GL_LIGHT0);
+
+	// set up left light
+	glLightfv(GL_LIGHT1, GL_POSITION, leftLightPos);
+	glLightfv(GL_LIGHT1, GL_AMBIENT, leftLightAmbColor);
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, leftLightDiffColor);
+	glLightfv(GL_LIGHT1, GL_SPECULAR, leftLightSpecColor);
+	glEnable(GL_LIGHT1);
+}
+
 void myDisplay()
 {
 	////////////////////////////////////////////////////////////////////////
@@ -106,10 +164,8 @@ void myDisplay()
 	////////////////////////////////////////////////////////////////////////
 	//////  [!!!] STATIC Objects will be initialized in MAIN function
 	////////////////////////////////////////////////////////////////////////
-
-	////////////////////////////////////////////////////////////////////////
-	////////////////////////////////////////////////////////////////////////
-	////////////////////////////////////////////////////////////////////////
+	// Turn on 2 LIGHT SOURCE
+	setLight();
 
 	// Allowing the matrix operation applied onto current modelview matrix stack
 	// Comparing with GL_PROJECTION which is used to specify the projection transformation determining how 3d objects are
@@ -119,18 +175,7 @@ void myDisplay()
 	// diagonal elements are 1 and others are 0
 	glLoadIdentity();
 	if (e_cameraMode == __2D)
-	// gluLookAt(0, 0, 10, 0, 0, 0, 0, 1, 0);
-	// gluLookAt(0, 0, -10, 0, 0, 0, 0, 1, 0);
-	// gluLookAt(10, 0, 0, 0, 0, 0, 0, 1, 0);
-	// gluLookAt(0, 10, 0, 0, 0, 0, 0, 0, 1);
-	gluLookAt(0, 10, 0, 0, 0, 0, -1, 0, 0);
-	// gluLookAt(0, -10, 0, 0, 0, 0, -1, 0, 0);
-	// gluLookAt(10, 5, 10, 0, 0, 0, 0, 1, 0);
-	// gluLookAt(-10, 5, -10, 0, 0, 0, 0, 1, 0);
-	// gluLookAt(10, -5, 10, 0, 0, 0, 0, 1, 0);
-	// gluLookAt(10, -5, 10, 0, -0.5, 0, 0, 1, 0);
-
-
+		gluLookAt(0, 10, 0, 0, 0, 0, -1, 0, 0);
 	else
 		gluLookAt(
 			camera_X, camera_Y, camera_Z,
@@ -152,47 +197,64 @@ void myDisplay()
 		glRotatef(m_angleZ, 0, 0, 1);
 
 		// Display Main CrossBar
-		glColor3f(0, 0, 1);
-		e_colorMode == Colored ? crossBase.DrawColorCrossBase() : crossBase.DrawWireframe();
+		// glColor3f(0, 0, 1);
+		glPushMatrix();
+		setMaterial(0.1, 0.1, 0.1,
+					1.0, 0.0, 0.0,
+					1.0, 1.0, 1.0);
+		e_colorMode == Colored ? crossBase.Draw() : crossBase.DrawWireframe();
+		glPopMatrix();
 		// Display the Tie bar (connecting object)
 		glPushMatrix();
 		glTranslatef(0, fMainHeight + tieBar_height, 0);
 		glTranslatef(sliderX_pos / 2, 0, sliderZ_pos / 2);
 		glRotatef(m_angle, 0, 1, 0);
 		glRotatef(180, 1, 0, 0);
-		e_colorMode == Colored ? tieBar.DrawColorTieBar() : tieBar.DrawWireframe();
+
+		if (e_colorMode == Colored)
+		{
+			setMaterial(0.1, 0.2, 0.1,
+						1.0, 0.0, 0.0,
+						1.0, 1.0, 1.0);
+			tieBar.Draw();
+		}
+		else
+		{
+			glColor3f(0, 0, 1);
+			tieBar.DrawWireframe();
+		}
 		glPopMatrix();
 		// Display 3 latch cylinder
 		glPushMatrix();
 		glTranslatef(0, latchCylinder_height / 2 + 0.2, 0);
 		glTranslatef(sliderX_pos, fGrooveHeight, 0);
-		e_colorMode == Colored ? latchCylinderX.DrawColorLatchCylinder() : latchCylinderX.DrawWireframe();
+		e_colorMode == Colored ? latchCylinderX.Draw() : latchCylinderX.DrawWireframe();
 		glPopMatrix();
 
 		glPushMatrix();
 		glTranslatef(0, latchCylinder_height / 2 + 0.2, 0);
 		glTranslatef(0, fGrooveHeight, sliderZ_pos);
-		e_colorMode == Colored ? latchCylinderZ.DrawColorLatchCylinder() : latchCylinderZ.DrawWireframe();
+		e_colorMode == Colored ? latchCylinderZ.Draw() : latchCylinderZ.DrawWireframe();
 		glPopMatrix();
 
 		glPushMatrix();
 		glTranslatef(0, latchCylinder_height / 2 + fMainHeight + 0.01, 0);
 		glTranslatef(sliderX_pos / 2, 0, sliderZ_pos / 2);
-		e_colorMode == Colored ? latchCylinderCenter.DrawColorLatchCylinder() : latchCylinderCenter.DrawWireframe();
+		e_colorMode == Colored ? latchCylinderCenter.Draw() : latchCylinderCenter.DrawWireframe();
 		glPopMatrix();
 		// Display 2 slider
 		glPushMatrix();
 		glScalef(slider_length, slider_height, slider_width);
 		glTranslatef(0, fMainHeight, 0);
 		glTranslatef(sliderX_pos, fGrooveHeight, 0);
-		e_colorMode == Colored ? sliderX.DrawColorSlider() : sliderX.DrawWireframe();
+		e_colorMode == Colored ? sliderX.Draw() : sliderX.DrawWireframe();
 		glPopMatrix();
 
 		glPushMatrix();
 		glScalef(slider_width, slider_height, slider_length);
 		glTranslatef(0, fMainHeight, 0);
 		glTranslatef(0, fGrooveHeight, sliderZ_pos);
-		e_colorMode == Colored ? sliderZ.DrawColorSlider() : sliderZ.DrawWireframe();
+		e_colorMode == Colored ? sliderZ.Draw() : sliderZ.DrawWireframe();
 		glPopMatrix();
 		glPopMatrix();
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -353,7 +415,6 @@ void myInit()
 	glLoadIdentity();
 
 	gluPerspective(60.0f, (GLfloat)screenWidth / (GLfloat)screenHeight, 1.0f, 1000.0f);
-
 
 	camera_angle = 45;
 	camera_height = 8;
