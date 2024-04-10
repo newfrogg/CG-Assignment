@@ -14,12 +14,6 @@ enum colorMode
 	Colored
 };
 
-enum movementMode
-{
-	clockWise,
-	counter_clockWise
-};
-
 enum cameraMode
 {
 	__3D,
@@ -30,10 +24,8 @@ enum cameraMode
 int screenWidth = 1080;
 int screenHeight = 720;
 
-movementMode e_movementModeX = clockWise;
-movementMode e_movementModeY = clockWise;
 colorMode e_colorMode = Colored;
-cameraMode e_cameraMode = __3D;
+cameraMode e_cameraMode = __2D;
 
 /// Mesh of Objects
 Mesh crossBase;
@@ -60,7 +52,7 @@ float tieBar_short_width = 0.6;
 float tieBar_height = 0.4;
 // LATCH CYLINDER X / Z / CENTER
 float latchCylinder_radius = fGrooveWidth / 2 - 0.1;
-float latchCylinder_height = fMainHeight - fGrooveHeight + 0.2;
+float latchCylinder_height = fMainHeight - fGrooveHeight + 0.3;
 // SLIDER X / Z
 float slider_height = fMainHeight - fGrooveHeight;
 float slider_width = fGrooveWidth;
@@ -68,10 +60,10 @@ float slider_length = 1; // FLength / 5
 
 float sliderMax_pos = 4;
 float m_angle = 45;
-float sliderX_pos = 4 * cos(m_angle * M_PI / 180);
-float sliderZ_pos = 4 * sin(m_angle * M_PI / 180);
+float sliderX_pos = 4 * cos(DEG2RAD(m_angle));
+float sliderZ_pos = 4 * sin(DEG2RAD(m_angle));
 
-// Local camera papameter
+// Local camera papameters
 float m_angleX = 0;
 float m_angleZ = 0;
 
@@ -126,18 +118,31 @@ void myDisplay()
 	// Load identity means replace current matrix with the identity matrix recognizing as a special matrix where all
 	// diagonal elements are 1 and others are 0
 	glLoadIdentity();
-	// (Eye, center, up)
-	gluLookAt(
-		camera_X, camera_Y, camera_Z,
-		0, 0, 0,
-		0, 1, 0);
+	if (e_cameraMode == __2D)
+	// gluLookAt(0, 0, 10, 0, 0, 0, 0, 1, 0);
+	// gluLookAt(0, 0, -10, 0, 0, 0, 0, 1, 0);
+	// gluLookAt(10, 0, 0, 0, 0, 0, 0, 1, 0);
+	// gluLookAt(0, 10, 0, 0, 0, 0, 0, 0, 1);
+	gluLookAt(0, 10, 0, 0, 0, 0, -1, 0, 0);
+	// gluLookAt(0, -10, 0, 0, 0, 0, -1, 0, 0);
+	// gluLookAt(10, 5, 10, 0, 0, 0, 0, 1, 0);
+	// gluLookAt(-10, 5, -10, 0, 0, 0, 0, 1, 0);
+	// gluLookAt(10, -5, 10, 0, 0, 0, 0, 1, 0);
+	// gluLookAt(10, -5, 10, 0, -0.5, 0, 0, 1, 0);
+
+
+	else
+		gluLookAt(
+			camera_X, camera_Y, camera_Z,
+			0, 0, 0,
+			0, 1, 0);
 	// Clear buffers to prepare for rendering new frame
 	// just only glEnable(GL_DEPTH_TEST) have been enabled before so that the following for depth need being called
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	// gl view port which set port of view in the current screen
 	glViewport(0, 0, screenWidth, screenHeight);
 	{
-		/// ALLOW ROTATE AROUND ITS STRUCTURE AXIS 
+		/// ALLOW ROTATE AROUND ITS STRUCTURE AXIS
 		/// local x-axis map to axis-X in real world
 		/// local y-axis map to axis-Z in real world
 		/// The height is always the axis-Y
@@ -191,7 +196,7 @@ void myDisplay()
 		glPopMatrix();
 		glPopMatrix();
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		///////////////////////////////////////////////// END OF VIEW PORT ///////////////////////////////////////////////// 
+		///////////////////////////////////////////////// END OF VIEW PORT /////////////////////////////////////////////////
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	}
 
@@ -213,12 +218,16 @@ void myKeyboard(unsigned char key, int x, int y)
 	switch (key)
 	{
 	case 27: // ESC key
+	{
 		exit(0);
 		break;
+	}
 	case 'w':
 	case 'W':
+	{
 		e_colorMode = (e_colorMode == Wired) ? Colored : Wired;
 		break;
+	}
 	case '1':
 	{
 		float dx = 2;
@@ -257,8 +266,8 @@ void myKeyboard(unsigned char key, int x, int y)
 		m_angle += dx;
 		if (m_angle >= 360)
 			m_angle = 0;
-		sliderX_pos = 4 * cos(m_angle * M_PI / 180);
-		sliderZ_pos = 4 * sin(m_angle * M_PI / 180);
+		sliderX_pos = 4 * cos(DEG2RAD(m_angle));
+		sliderZ_pos = 4 * sin(DEG2RAD(m_angle));
 		break;
 	}
 	case '6':
@@ -267,22 +276,28 @@ void myKeyboard(unsigned char key, int x, int y)
 		m_angle -= dx;
 		if (m_angle <= -360)
 			m_angle = 0;
-		sliderX_pos = 4 * cos(m_angle * M_PI / 180);
-		sliderZ_pos = 4 * sin(m_angle * M_PI / 180);
+		sliderX_pos = 4 * cos(DEG2RAD(m_angle));
+		sliderZ_pos = 4 * sin(DEG2RAD(m_angle));
 		break;
 	}
 	case '+':
-		camera_dis += 0.2f;
+	{
+		camera_dis += 0.6f;
 		changeCameraPos();
 		break;
+	}
 	case '-':
-		camera_dis -= 0.2f;
+	{
+		camera_dis -= 0.6f;
 		changeCameraPos();
 		break;
+	}
 	case 'v':
 	case 'V':
+	{
 		e_cameraMode = (e_cameraMode == __3D) ? __2D : __3D;
 		break;
+	}
 	default:
 		break;
 	}
@@ -317,6 +332,7 @@ void mySpecialKeyboard(int key, int x, int y)
 	}
 	printf("[LOG:::BUTTON] button[%c] is pressed.\n", key);
 	glutPostRedisplay();
+	printf("CameraX = %f, CameraY = %f, CameraZ = %f\n", camera_X, camera_Y, camera_Z);
 }
 
 void myInit()
@@ -335,11 +351,13 @@ void myInit()
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(-fHalfSize, fHalfSize, -fHalfSize, fHalfSize, -1000, 1000);
+
+	gluPerspective(60.0f, (GLfloat)screenWidth / (GLfloat)screenHeight, 1.0f, 1000.0f);
+
 
 	camera_angle = 45;
-	camera_height = 4;
-	camera_dis = 4.5;
+	camera_height = 8;
+	camera_dis = 4;
 	camera_X = sin(DEG2RAD(camera_angle)) * camera_dis;
 	camera_Y = camera_height;
 	camera_Z = cos(DEG2RAD(camera_angle)) * camera_dis;
@@ -355,8 +373,6 @@ int main(int argc, char *argv[])
 
 	////////////////////////////////////////////////////////////////////////
 	//////  INIT STATIC OBJECTS (that not changes wihtin runtime)
-	////////////////////////////////////////////////////////////////////////
-	//////  [!!!] DYNAMIC Objects will be initialized in mydisplay function
 	////////////////////////////////////////////////////////////////////////
 	crossBase.CreatCrossBase(fMainHeight, fGrooveHeight, fMainWidth, fSubWidth, fGrooveWidth, fLength);
 	tieBar.CreateTrapezium(tieBar_height, tieBar_short_width, tieBar_long_width, tieBar_length);
