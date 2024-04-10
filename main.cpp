@@ -48,7 +48,7 @@ Mesh sliderZ;
 // MAIN CROSSBASE
 float fMainHeight = 1;
 float fGrooveHeight = 0.5;
-float fLength = 5;
+float fLength = 4.5;
 // assume: fMainWidth = 2 * fSubWidth + fGrooveWidth
 float fMainWidth = 1;
 float fSubWidth = 0.3;
@@ -59,8 +59,8 @@ float tieBar_long_width = 0.4;
 float tieBar_short_width = 0.6;
 float tieBar_height = 0.4;
 // LATCH CYLINDER X / Z / CENTER
-float latchCylinder_radius = fGrooveWidth / 2 - 0.1 ;
-float latchCylinder_height = fMainHeight - fGrooveHeight;
+float latchCylinder_radius = fGrooveWidth / 2 - 0.1;
+float latchCylinder_height = fMainHeight - fGrooveHeight + 0.2;
 // SLIDER X / Z
 float slider_height = fMainHeight - fGrooveHeight;
 float slider_width = fGrooveWidth;
@@ -70,6 +70,10 @@ float sliderMax_pos = 4;
 float m_angle = 45;
 float sliderX_pos = 4 * cos(m_angle * M_PI / 180);
 float sliderZ_pos = 4 * sin(m_angle * M_PI / 180);
+
+// Local camera papameter
+float m_angleX = 0;
+float m_angleZ = 0;
 
 /// Global camera settings
 float camera_angle;
@@ -133,100 +137,62 @@ void myDisplay()
 	// gl view port which set port of view in the current screen
 	glViewport(0, 0, screenWidth, screenHeight);
 	{
+		/// ALLOW ROTATE AROUND ITS STRUCTURE AXIS 
+		/// local x-axis map to axis-X in real world
+		/// local y-axis map to axis-Z in real world
+		/// The height is always the axis-Y
+		/// CHANGE MODE BETWEEN DRAW COLORED OR WIREFRAME IS ALSO ALLOWED.
 		glPushMatrix();
-		// drawAxis();
-		if (e_colorMode == Wired)
-		{
-			glColor3f(0, 0, 1);
-			crossBase.DrawWireframe();
+		glRotatef(m_angleX, 1, 0, 0);
+		glRotatef(m_angleZ, 0, 0, 1);
 
-			glPushMatrix();
-			glTranslatef(0, fMainHeight + tieBar_height, 0);
-			glTranslatef(sliderX_pos / 2, 0, sliderZ_pos / 2);
-			glRotatef(m_angle, 0, 1, 0);
-			glRotatef(180, 1, 0, 0);
-			tieBar.DrawWireframe();
-			glPopMatrix();
-
-			glPushMatrix();
-			glTranslatef(0, latchCylinder_height / 2 + 0.5 , 0);
-			glTranslatef(sliderX_pos, fGrooveHeight, 0);
-			latchCylinderX.DrawWireframe();
-			glPopMatrix();
-
-			glPushMatrix();
-			glTranslatef(0, latchCylinder_height / 2 + 0.5, 0);
-			glTranslatef(0, fGrooveHeight, sliderZ_pos);
-			latchCylinderZ.DrawWireframe();
-			glPopMatrix();
-
-			glPushMatrix();
-			glTranslatef(0, latchCylinder_height / 2 + fMainHeight + 0.01, 0);
-			glTranslatef(sliderX_pos / 2, 0, sliderZ_pos / 2);
-			latchCylinderCenter.DrawWireframe();
-			glPopMatrix();
-
-			glPushMatrix();
-			glScalef(slider_length, slider_height, slider_width);
-			glTranslatef(0, fMainHeight, 0);
-			glTranslatef(sliderX_pos, fGrooveHeight, 0);
-			sliderX.DrawWireframe();
-			glPopMatrix();
-
-			glPushMatrix();
-			glScalef(slider_width, slider_height, slider_length); 
-			glTranslatef(0, fMainHeight, 0);
-			glTranslatef(0, fGrooveHeight, sliderZ_pos);
-			sliderZ.DrawWireframe();
-			glPopMatrix();
-		}
-		else
-		{
-			glColor3f(0, 0, 1);
-			crossBase.DrawColorCrossBase();
-
-			glPushMatrix();
-			glTranslatef(0, fMainHeight + tieBar_height, 0);
-			glTranslatef(sliderX_pos / 2, 0, sliderZ_pos / 2);
-			glRotatef(m_angle, 0, 1, 0);
-			glRotatef(180, 1, 0, 0);
-			tieBar.DrawColorTieBar();
-			glPopMatrix();
-
-			glPushMatrix();
-			glTranslatef(0, latchCylinder_height / 2 + 0.5 , 0);
-			glTranslatef(sliderX_pos, fGrooveHeight, 0);
-			latchCylinderX.DrawColorLatchCylinder();
-			glPopMatrix();
-
-			glPushMatrix();
-			glTranslatef(0, latchCylinder_height / 2 + 0.5, 0);
-			glTranslatef(0, fGrooveHeight, sliderZ_pos);
-			latchCylinderZ.DrawColorLatchCylinder();
-			glPopMatrix();
-
-			glPushMatrix();
-			glTranslatef(0, latchCylinder_height / 2 + fMainHeight + 0.01, 0);
-			glTranslatef(sliderX_pos / 2, 0, sliderZ_pos / 2);
-			latchCylinderCenter.DrawColorLatchCylinder();
-			glPopMatrix();
-
-			glPushMatrix();
-			glScalef(slider_length, slider_height, slider_width);
-			glTranslatef(0, fMainHeight, 0);
-			glTranslatef(sliderX_pos, fGrooveHeight, 0);
-			sliderX.DrawColorSlider();
-			glPopMatrix();
-
-			glPushMatrix();
-			glScalef(slider_width, slider_height, slider_length); 
-			glTranslatef(0, fMainHeight, 0);
-			glTranslatef(0, fGrooveHeight, sliderZ_pos);
-			sliderZ.DrawColorSlider();
-			glPopMatrix();
-		}
-	
+		// Display Main CrossBar
+		glColor3f(0, 0, 1);
+		e_colorMode == Colored ? crossBase.DrawColorCrossBase() : crossBase.DrawWireframe();
+		// Display the Tie bar (connecting object)
+		glPushMatrix();
+		glTranslatef(0, fMainHeight + tieBar_height, 0);
+		glTranslatef(sliderX_pos / 2, 0, sliderZ_pos / 2);
+		glRotatef(m_angle, 0, 1, 0);
+		glRotatef(180, 1, 0, 0);
+		e_colorMode == Colored ? tieBar.DrawColorTieBar() : tieBar.DrawWireframe();
 		glPopMatrix();
+		// Display 3 latch cylinder
+		glPushMatrix();
+		glTranslatef(0, latchCylinder_height / 2 + 0.2, 0);
+		glTranslatef(sliderX_pos, fGrooveHeight, 0);
+		e_colorMode == Colored ? latchCylinderX.DrawColorLatchCylinder() : latchCylinderX.DrawWireframe();
+		glPopMatrix();
+
+		glPushMatrix();
+		glTranslatef(0, latchCylinder_height / 2 + 0.2, 0);
+		glTranslatef(0, fGrooveHeight, sliderZ_pos);
+		e_colorMode == Colored ? latchCylinderZ.DrawColorLatchCylinder() : latchCylinderZ.DrawWireframe();
+		glPopMatrix();
+
+		glPushMatrix();
+		glTranslatef(0, latchCylinder_height / 2 + fMainHeight + 0.01, 0);
+		glTranslatef(sliderX_pos / 2, 0, sliderZ_pos / 2);
+		e_colorMode == Colored ? latchCylinderCenter.DrawColorLatchCylinder() : latchCylinderCenter.DrawWireframe();
+		glPopMatrix();
+		// Display 2 slider
+		glPushMatrix();
+		glScalef(slider_length, slider_height, slider_width);
+		glTranslatef(0, fMainHeight, 0);
+		glTranslatef(sliderX_pos, fGrooveHeight, 0);
+		e_colorMode == Colored ? sliderX.DrawColorSlider() : sliderX.DrawWireframe();
+		glPopMatrix();
+
+		glPushMatrix();
+		glScalef(slider_width, slider_height, slider_length);
+		glTranslatef(0, fMainHeight, 0);
+		glTranslatef(0, fGrooveHeight, sliderZ_pos);
+		e_colorMode == Colored ? sliderZ.DrawColorSlider() : sliderZ.DrawWireframe();
+		glPopMatrix();
+		glPopMatrix();
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		///////////////////////////////////////////////// END OF VIEW PORT ///////////////////////////////////////////////// 
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	}
 
 	// Perform rendering operations
@@ -254,13 +220,37 @@ void myKeyboard(unsigned char key, int x, int y)
 		e_colorMode = (e_colorMode == Wired) ? Colored : Wired;
 		break;
 	case '1':
+	{
+		float dx = 2;
+		m_angleX += dx;
+		if (m_angleX >= 360)
+			m_angleX = 0;
+		break;
+	}
 	case '2':
-		e_movementModeY = (key == '1') ? counter_clockWise : clockWise;
+	{
+		float dx = 2;
+		m_angleX -= dx;
+		if (m_angleX <= -360)
+			m_angleX = 0;
 		break;
+	}
 	case '3':
-	case '4':
-		e_movementModeX = (key == '3') ? counter_clockWise : clockWise;
+	{
+		float dz = 2;
+		m_angleZ += dz;
+		if (m_angleZ >= 360)
+			m_angleZ = 0;
 		break;
+	}
+	case '4':
+	{
+		float dz = 2;
+		m_angleZ -= dz;
+		if (m_angleZ <= -360)
+			m_angleZ = 0;
+		break;
+	}
 	case '5':
 	{
 		float dx = 2;
@@ -348,8 +338,8 @@ void myInit()
 	glOrtho(-fHalfSize, fHalfSize, -fHalfSize, fHalfSize, -1000, 1000);
 
 	camera_angle = 45;
-	camera_height = 4.0;
-	camera_dis = 3;
+	camera_height = 4;
+	camera_dis = 4.5;
 	camera_X = sin(DEG2RAD(camera_angle)) * camera_dis;
 	camera_Y = camera_height;
 	camera_Z = cos(DEG2RAD(camera_angle)) * camera_dis;
