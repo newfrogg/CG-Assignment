@@ -865,6 +865,7 @@ void Mesh::CreatCrossBase(float fMainHeight, float fGrooveHeight, float fMainWid
 	/*
 	SHAPE 3 FACES
 	*/
+
 	for (int half_quarter_bot_and_top = 0; half_quarter_bot_and_top < 4; half_quarter_bot_and_top++)
 	{
 		face[fei].nVerts = 4;
@@ -906,22 +907,23 @@ void Mesh::CreatCrossBase(float fMainHeight, float fGrooveHeight, float fMainWid
 		face[fei].vert[3].vertIndex = 70 + 4 * (half_quarter + 2) + 3;
 		fei++;
 	}
+
 	/*
 	ADDITION CENTER FOR TOP & BOTTOM SIDE
 	*/
 	face[fei].nVerts = 4;
 	face[fei].vert = new VertexID[face[fei].nVerts];
-	face[fei].vert[0].vertIndex = 50 + 0;
-	face[fei].vert[1].vertIndex = 50 + 3;
-	face[fei].vert[2].vertIndex = 50 + 5;
-	face[fei].vert[3].vertIndex = 50 + 4;
+	face[fei].vert[0].vertIndex = 70 + 0;
+	face[fei].vert[1].vertIndex = 70 + 1;
+	face[fei].vert[2].vertIndex = 70 + 5;
+	face[fei].vert[3].vertIndex = 70 + 4;
 	fei++;
 	face[fei].nVerts = 4;
 	face[fei].vert = new VertexID[face[fei].nVerts];
-	face[fei].vert[0].vertIndex = 50 + 4 * 2 + 0;
-	face[fei].vert[1].vertIndex = 50 + 4 * 2 + 3;
-	face[fei].vert[2].vertIndex = 50 + 4 * 2 + 5;
-	face[fei].vert[3].vertIndex = 50 + 4 * 2 + 4;
+	face[fei].vert[0].vertIndex = 70 + 4 * 2 + 0;
+	face[fei].vert[1].vertIndex = 70 + 4 * 2 + 1;
+	face[fei].vert[2].vertIndex = 70 + 4 * 2 + 5;
+	face[fei].vert[3].vertIndex = 70 + 4 * 2 + 4;
 
 	printf("Num of faces: %d\n", fei);
 }
@@ -941,7 +943,10 @@ void Mesh::DrawWireframe()
 		glEnd();
 	}
 }
-
+// Coloring Reference
+// https://d2t1xqejof9utc.cloudfront.net/screenshots/pics/f64a9cd9f9c4e501e83abce6f95d9b40/large.jpg
+// Color picker from image
+// https://html-color.codes/image
 void Mesh::DrawColor()
 {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -954,9 +959,90 @@ void Mesh::DrawColor()
 			int ic = face[f].vert[v].colorIndex;
 
 			ic = f % COLORNUM;
-
 			glColor3f(ColorArr[ic][0], ColorArr[ic][1], ColorArr[ic][2]);
-			// glColor3f(0, 1, 0); // green
+			glVertex3f(pt[iv].x, pt[iv].y, pt[iv].z);
+		}
+		glEnd();
+	}
+}
+
+void Mesh::DrawColorCrossBase()
+{
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	for (int f = 0; f < numFaces; f++)
+	{
+		glBegin(GL_POLYGON);
+		for (int v = 0; v < face[f].nVerts; v++)
+		{
+			int iv = face[f].vert[v].vertIndex;
+			int ic = face[f].vert[v].colorIndex;
+
+			ic = f % COLORNUM;
+			glColor3f(124.0f / 255, 124.0f / 255, 122.0f / 255);
+			// if (f < 40)
+			// 	glColor3f(0, 1, 0); // green
+			// else
+			// 	glColor3f(1, 0, 0); // red
+			glVertex3f(pt[iv].x, pt[iv].y, pt[iv].z);
+		}
+		glEnd();
+	}
+}
+
+void Mesh::DrawColorLatchCylinder()
+{
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	for (int f = 0; f < numFaces; f++)
+	{
+		glBegin(GL_POLYGON);
+		for (int v = 0; v < face[f].nVerts; v++)
+		{
+			int iv = face[f].vert[v].vertIndex;
+			int ic = face[f].vert[v].colorIndex;
+
+			ic = f % COLORNUM;
+			glColor3f(186.0f / 255, 189.0f / 255, 184.0f / 255);
+
+			glVertex3f(pt[iv].x, pt[iv].y, pt[iv].z);
+		}
+		glEnd();
+	}
+}
+
+void Mesh::DrawColorTieBar()
+{
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	for (int f = 0; f < numFaces; f++)
+	{
+		glBegin(GL_POLYGON);
+		for (int v = 0; v < face[f].nVerts; v++)
+		{
+			int iv = face[f].vert[v].vertIndex;
+			int ic = face[f].vert[v].colorIndex;
+
+			ic = f % COLORNUM;
+			glColor3f(228.0f / 255, 167.0f / 255, 83.0f / 255);
+
+			glVertex3f(pt[iv].x, pt[iv].y, pt[iv].z);
+		}
+		glEnd();
+	}
+}
+
+void Mesh::DrawColorSlider()
+{
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	for (int f = 0; f < numFaces; f++)
+	{
+		glBegin(GL_POLYGON);
+		for (int v = 0; v < face[f].nVerts; v++)
+		{
+			int iv = face[f].vert[v].vertIndex;
+			int ic = face[f].vert[v].colorIndex;
+
+			ic = f % COLORNUM;
+			glColor3f(254.0f / 255, 251.0f / 255, 41.0f / 255);
+
 			glVertex3f(pt[iv].x, pt[iv].y, pt[iv].z);
 		}
 		glEnd();

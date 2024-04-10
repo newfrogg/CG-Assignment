@@ -67,6 +67,10 @@ public:
 	}
 	void DrawWireframe();
 	void DrawColor();
+	void DrawColorCrossBase();
+	void DrawColorLatchCylinder();
+	void DrawColorTieBar();
+	void DrawColorSlider();
 
 	void CreateTetrahedron();
 	void CreateCube(float fSize);
