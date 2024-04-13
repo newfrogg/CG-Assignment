@@ -4,6 +4,11 @@
 #include "supportClass.h"
 #include "Mesh.h"
 
+#include "Cylinder.h"
+#include "Base.h"
+#include "Bar.h"
+#include "Cube.h"
+
 #define DEG2RAD(x) (x * M_PI) / 180.0f
 
 using namespace std;
@@ -26,15 +31,6 @@ int screenHeight = 720;
 
 colorMode e_colorMode = Colored;
 cameraMode e_cameraMode = __3D;
-
-/// Mesh of Objects
-Mesh crossBase;
-Mesh latchCylinderX;
-Mesh latchCylinderZ;
-Mesh latchCylinderCenter;
-Mesh tieBar;
-Mesh sliderX;
-Mesh sliderZ;
 
 /// Size of Objects
 // MAIN CROSSBASE
@@ -73,6 +69,16 @@ float camera_height;
 float camera_dis;
 float camera_X, camera_Y, camera_Z;
 float lookAt_X, lookAt_Y, lookAt_Z;
+
+/// Mesh of Objects
+Base 	 crossbase 			 = Base(fMainHeight, fGrooveHeight, fMainWidth, fSubWidth, fGrooveWidth, fLength);
+Cylinder latchCylinderX 	 = Cylinder(20, latchCylinder_height, latchCylinder_radius);
+Cylinder latchCylinderZ 	 = Cylinder(20, latchCylinder_height, latchCylinder_radius);
+Cylinder latchCylinderCenter = Cylinder(20, latchCylinder_height, latchCylinder_radius);
+Bar 	 tiebar 			 = Bar(tieBar_height, tieBar_short_width, tieBar_long_width, tieBar_length);
+Cube 	 sliderX 			 = Cube(0.5);
+Cube 	 sliderZ 			 = Cube(0.5);
+
 
 // Opengl coordinate convention
 // x-axis extends to the right
@@ -141,6 +147,7 @@ void setLight()
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_NORMALIZE);
+	// glShadeModel(GL_SMOOTH);
 
 	// set up right light
 	glLightfv(GL_LIGHT0, GL_POSITION, rightLightPos);
@@ -165,7 +172,13 @@ void myDisplay()
 	//////  [!!!] STATIC Objects will be initialized in MAIN function
 	////////////////////////////////////////////////////////////////////////
 	// Turn on 2 LIGHT SOURCE
-	setLight();
+	/*
+		Issues:
+			- W press make changes in colors of mesh objects
+			- set material not ready maybe the issue.
+			- black and red are mostly displayed.
+	*/
+	// setLight();
 
 	// Allowing the matrix operation applied onto current modelview matrix stack
 	// Comparing with GL_PROJECTION which is used to specify the projection transformation determining how 3d objects are
@@ -177,85 +190,87 @@ void myDisplay()
 	if (e_cameraMode == __2D)
 		gluLookAt(0, 10, 0, 0, 0, 0, -1, 0, 0);
 	else
-		gluLookAt(
-			camera_X, camera_Y, camera_Z,
-			0, 0, 0,
-			0, 1, 0);
+		gluLookAt(camera_X, camera_Y, camera_Z, 0, 0, 0, 0, 1, 0);
 	// Clear buffers to prepare for rendering new frame
 	// just only glEnable(GL_DEPTH_TEST) have been enabled before so that the following for depth need being called
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	// gl view port which set port of view in the current screen
+	/// ALLOW ROTATE AROUND ITS STRUCTURE AXIS
+	/// local x-axis map to axis-X in real world
+	/// local y-axis map to axis-Z in real world
+	/// The height is always the axis-Y
+	/// CHANGE MODE BETWEEN DRAW COLORED OR WIREFRAME IS ALSO ALLOWED.
+
+	
 	glViewport(0, 0, screenWidth, screenHeight);
 	{
-		/// ALLOW ROTATE AROUND ITS STRUCTURE AXIS
-		/// local x-axis map to axis-X in real world
-		/// local y-axis map to axis-Z in real world
-		/// The height is always the axis-Y
-		/// CHANGE MODE BETWEEN DRAW COLORED OR WIREFRAME IS ALSO ALLOWED.
+
+		//// Local ROTATE ALLOWED
 		glPushMatrix();
 		glRotatef(m_angleX, 1, 0, 0);
 		glRotatef(m_angleZ, 0, 0, 1);
 
-		// Display Main CrossBar
-		// glColor3f(0, 0, 1);
-		glPushMatrix();
-		setMaterial(0.1, 0.1, 0.1,
-					1.0, 0.0, 0.0,
-					1.0, 1.0, 1.0);
-		e_colorMode == Colored ? crossBase.Draw() : crossBase.DrawWireframe();
-		glPopMatrix();
-		// Display the Tie bar (connecting object)
-		glPushMatrix();
-		glTranslatef(0, fMainHeight + tieBar_height, 0);
-		glTranslatef(sliderX_pos / 2, 0, sliderZ_pos / 2);
-		glRotatef(m_angle, 0, 1, 0);
-		glRotatef(180, 1, 0, 0);
-
-		if (e_colorMode == Colored)
 		{
-			setMaterial(0.1, 0.2, 0.1,
+			// Display Main CrossBar
+			glPushMatrix();
+			setMaterial(0.1, 0.1, 0.1,
 						1.0, 0.0, 0.0,
 						1.0, 1.0, 1.0);
-			tieBar.Draw();
+			e_colorMode == Colored ? crossbase.Draw() : crossbase.DrawWireframe();
+			glPopMatrix();
+			// Display the Tie bar (connecting object)
+			glPushMatrix();
+			glTranslatef(0, fMainHeight + tieBar_height, 0);
+			glTranslatef(sliderX_pos / 2, 0, sliderZ_pos / 2);
+			glRotatef(m_angle, 0, 1, 0);
+			glRotatef(180, 1, 0, 0);
+
+			if (e_colorMode == Colored)
+			{
+				setMaterial(0.1, 0.2, 0.1,
+							1.0, 0.0, 0.0,
+							1.0, 1.0, 1.0);
+				tiebar.Draw();
+			}
+			else
+			{
+				glColor3f(0, 0, 1);
+				tiebar.DrawWireframe();
+			}
+			glPopMatrix();
+			// Display 3 latch cylinder
+			glPushMatrix();
+			glTranslatef(0, latchCylinder_height / 2 + 0.2, 0);
+			glTranslatef(sliderX_pos, fGrooveHeight, 0);
+			e_colorMode == Colored ? latchCylinderX.Draw() : latchCylinderX.DrawWireframe();
+			glPopMatrix();
+
+			glPushMatrix();
+			glTranslatef(0, latchCylinder_height / 2 + 0.2, 0);
+			glTranslatef(0, fGrooveHeight, sliderZ_pos);
+			e_colorMode == Colored ? latchCylinderZ.Draw() : latchCylinderZ.DrawWireframe();
+			glPopMatrix();
+
+			glPushMatrix();
+			glTranslatef(0, latchCylinder_height / 2 + fMainHeight + 0.01, 0);
+			glTranslatef(sliderX_pos / 2, 0, sliderZ_pos / 2);
+			e_colorMode == Colored ? latchCylinderCenter.Draw() : latchCylinderCenter.DrawWireframe();
+			glPopMatrix();
+			// Display 2 slider
+			glPushMatrix();
+			glScalef(slider_length, slider_height, slider_width);
+			glTranslatef(0, fMainHeight, 0);
+			glTranslatef(sliderX_pos, fGrooveHeight, 0);
+			e_colorMode == Colored ? sliderX.Draw() : sliderX.DrawWireframe();
+			glPopMatrix();
+
+			glPushMatrix();
+			glScalef(slider_width, slider_height, slider_length);
+			glTranslatef(0, fMainHeight, 0);
+			glTranslatef(0, fGrooveHeight, sliderZ_pos);
+			e_colorMode == Colored ? sliderZ.Draw() : sliderZ.DrawWireframe();
+			glPopMatrix();
 		}
-		else
-		{
-			glColor3f(0, 0, 1);
-			tieBar.DrawWireframe();
-		}
-		glPopMatrix();
-		// Display 3 latch cylinder
-		glPushMatrix();
-		glTranslatef(0, latchCylinder_height / 2 + 0.2, 0);
-		glTranslatef(sliderX_pos, fGrooveHeight, 0);
-		e_colorMode == Colored ? latchCylinderX.Draw() : latchCylinderX.DrawWireframe();
-		glPopMatrix();
-
-		glPushMatrix();
-		glTranslatef(0, latchCylinder_height / 2 + 0.2, 0);
-		glTranslatef(0, fGrooveHeight, sliderZ_pos);
-		e_colorMode == Colored ? latchCylinderZ.Draw() : latchCylinderZ.DrawWireframe();
-		glPopMatrix();
-
-		glPushMatrix();
-		glTranslatef(0, latchCylinder_height / 2 + fMainHeight + 0.01, 0);
-		glTranslatef(sliderX_pos / 2, 0, sliderZ_pos / 2);
-		e_colorMode == Colored ? latchCylinderCenter.Draw() : latchCylinderCenter.DrawWireframe();
-		glPopMatrix();
-		// Display 2 slider
-		glPushMatrix();
-		glScalef(slider_length, slider_height, slider_width);
-		glTranslatef(0, fMainHeight, 0);
-		glTranslatef(sliderX_pos, fGrooveHeight, 0);
-		e_colorMode == Colored ? sliderX.Draw() : sliderX.DrawWireframe();
-		glPopMatrix();
-
-		glPushMatrix();
-		glScalef(slider_width, slider_height, slider_length);
-		glTranslatef(0, fMainHeight, 0);
-		glTranslatef(0, fGrooveHeight, sliderZ_pos);
-		e_colorMode == Colored ? sliderZ.Draw() : sliderZ.DrawWireframe();
-		glPopMatrix();
 		glPopMatrix();
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////// END OF VIEW PORT /////////////////////////////////////////////////
@@ -433,15 +448,17 @@ int main(int argc, char *argv[])
 	glutCreateWindow("Lab 3");								  // open the screen window
 
 	////////////////////////////////////////////////////////////////////////
-	//////  INIT STATIC OBJECTS (that not changes wihtin runtime)
+	//////  CREATE OBJECTS (static & dynamic included)
 	////////////////////////////////////////////////////////////////////////
-	crossBase.CreatCrossBase(fMainHeight, fGrooveHeight, fMainWidth, fSubWidth, fGrooveWidth, fLength);
-	tieBar.CreateTrapezium(tieBar_height, tieBar_short_width, tieBar_long_width, tieBar_length);
-	latchCylinderX.CreateCylinder(20, latchCylinder_height, latchCylinder_radius);
-	latchCylinderZ.CreateCylinder(20, latchCylinder_height, latchCylinder_radius);
-	latchCylinderCenter.CreateCylinder(20, latchCylinder_height, latchCylinder_radius);
-	sliderX.CreateCube(0.5);
-	sliderZ.CreateCube(0.5);
+	crossbase.create();
+	tiebar.create();
+	latchCylinderX.create();
+	latchCylinderZ.create();
+	latchCylinderCenter.create();
+	sliderX.create();
+	sliderZ.create();
+
+
 	// Init opengl environment
 	myInit();
 	// Function to display main presentation

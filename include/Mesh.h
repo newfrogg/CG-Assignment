@@ -1,6 +1,6 @@
 #if !defined(_MESH_CLASS)
 #define _MESH_CLASS
-
+#define PI 3.1415926
 #include "supportClass.h"
 /*
 Reference: https://www.instructables.com/Trammel-of-Archimedes-3D-Print/
@@ -71,34 +71,11 @@ public:
 	void CalculateFacesNorm();
 	void Draw();
 
-	void DrawColorCrossBase();
-	void DrawColorLatchCylinder();
-	void DrawColorTieBar();
-	void DrawColorSlider();
 
 	void CreateTetrahedron();
-	void CreateCube(float fSize);
-	void CreateCylinder(int nSegment, float fHeight, float fRadius);
+
 
 	void CreateCylinderModified(float center_x, float center_y, float center_z, int nSegment, float fHeight, float fRadius);
-	/*
-	Example: shape1.CreateTrapezium(1, 1 + 0.2, 2, 4);
-
-	@param fShortWidth top of trapezium
-	@param fLongWitdh bottom of trapezium
-	*/
-	void CreateTrapezium(float fHeight, float fShortWidth, float fLongWidth, float fLength);
-
-	void CreateHandle(float fLengthX, float fLengthZ, float fHeight, float fWidthX, float fWidthZ, float fRadiusX, float fRadiusY, float fRadiusZ);
-	/*
-	@param fMainHeight
-	@param fGrooveHeight
-	@param fMainWidth
-	@param fSubWidth
-	@param fGrooveWidth
-	@param fLength
-	*/
-	void CreatCrossBase(float fMainHeight, float fGrooveHeight, float fMainWidth, float fSubWidth, float fGrooveWidth, float fLength);
 };
 
 #endif
