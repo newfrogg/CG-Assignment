@@ -81,8 +81,7 @@ void Cylinder::Draw() {
 		for (int v = 0; v < face[f].nVerts; v++)
 		{
 			int iv = face[f].vert[v].vertIndex;
-			glColor3f(186.0f / 255, 189.0f / 255, 184.0f / 255);
-
+			glNormal3f(face[f].facenorm.x, face[f].facenorm.y, face[f].facenorm.z);
 			glVertex3f(pt[iv].x, pt[iv].y, pt[iv].z);
 		}
 		glEnd();

@@ -83,8 +83,7 @@ void Bar::Draw()
 		for (int v = 0; v < face[f].nVerts; v++)
 		{
 			int iv = face[f].vert[v].vertIndex;
-			glColor3f(228.0f / 255, 167.0f / 255, 83.0f / 255);
-
+			glNormal3f(face[f].facenorm.x, face[f].facenorm.y, face[f].facenorm.z);
 			glVertex3f(pt[iv].x, pt[iv].y, pt[iv].z);
 		}
 		glEnd();

@@ -429,7 +429,7 @@ void myKeyboard(unsigned char key, int x, int y)
 	}
 
 	glutPostRedisplay();
-	printf("[LOG:::BUTTON] button[%c] is pressed.\n", key);
+	// printf("[LOG:::BUTTON] button[%c] is pressed.\n", key);
 }
 
 void mySpecialKeyboard(int key, int x, int y)
@@ -456,9 +456,9 @@ void mySpecialKeyboard(int key, int x, int y)
 		// Handle other keys if needed
 		break;
 	}
-	printf("[LOG:::BUTTON] button[%c] is pressed.\n", key);
+	// printf("[LOG:::BUTTON] button[%c] is pressed.\n", key);
 	glutPostRedisplay();
-	printf("CameraX = %f, CameraY = %f, CameraZ = %f\n", camera_X, camera_Y, camera_Z);
+	// printf("CameraX = %f, CameraY = %f, CameraZ = %f\n", camera_X, camera_Y, camera_Z);
 }
 
 void myInit()
@@ -489,8 +489,26 @@ void myInit()
 	camera_Z = cos(DEG2RAD(camera_angle)) * camera_dis;
 }
 
+void showInstructions() {
+	cout << "1, 2      : Xoay hinh chu thap xung quanh truc Y cuc bo\n";
+    cout << "3, 4      : Xoay hinh chu thap xung quanh truc X cuc bo\n";
+    cout << "5, 6      : Dich chuyen thanh truot\n";
+    cout << "W, w      : Chuyen doi qua lai giua che do khung day va to mau\n";
+    cout << "V, v  	   : Chuyen doi qua lai giua hai che do nhin\n";
+    cout << "+         : Tang khoang cach camera\n";
+    cout << "-     	   : Giam khoang cach camera\n";
+    cout << "up arrow  : Tang chieu cao camera\n";
+    cout << "down arrow: Giam chieu cao camera\n";
+    cout << "<-        : Quay camera theo chieu kim dong ho\n";
+    cout << "->        : Quay camera nguoc chieu kim dong ho\n";
+}
+
+
 int main(int argc, char *argv[])
 {
+	// Display instruction to control the application
+	showInstructions();
+	// Opengl Main display program
 	glutInit(&argc, (char **)argv);							  // initialize the tool kit
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH); // set the display mode
 	glutInitWindowSize(screenWidth, screenHeight);			  // set window size
@@ -498,7 +516,7 @@ int main(int argc, char *argv[])
 	glutCreateWindow("Lab 3");								  // open the screen window
 
 	////////////////////////////////////////////////////////////////////////
-	//////  CREATE OBJECTS (static & dynamic included)
+	//////  CREATE OBJECTS 
 	////////////////////////////////////////////////////////////////////////
 	crossbase.create();
 	tiebar.create();
@@ -507,7 +525,6 @@ int main(int argc, char *argv[])
 	latchCylinderCenter.create();
 	sliderX.create();
 	sliderZ.create();
-
 	// Init opengl environment
 	myInit();
 	// Function to display main presentation
@@ -516,7 +533,6 @@ int main(int argc, char *argv[])
 	// Setup the keyboard function triggering callback (special keyboard included)
 	glutKeyboardFunc(myKeyboard);
 	glutSpecialFunc(mySpecialKeyboard);
-
 	glutMainLoop();
 
 	return 0;

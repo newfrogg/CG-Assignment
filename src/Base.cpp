@@ -336,7 +336,7 @@ void Base::create() {
 }
 
 void Base::Draw() {
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	// glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	for (int f = 0; f < numFaces; f++)
 	{
 		glBegin(GL_POLYGON);
@@ -344,7 +344,7 @@ void Base::Draw() {
 		{
 			int iv = face[f].vert[v].vertIndex;
 
-			glColor3f(124.0f / 255, 124.0f / 255, 122.0f / 255);
+			glNormal3f(face[f].facenorm.x, face[f].facenorm.y, face[f].facenorm.z);
 			glVertex3f(pt[iv].x, pt[iv].y, pt[iv].z);
 		}
 		glEnd();

@@ -86,8 +86,7 @@ void Cube::Draw() {
 		for (int v = 0; v < face[f].nVerts; v++)
 		{
 			int iv = face[f].vert[v].vertIndex;
-			glColor3f(254.0f / 255, 251.0f / 255, 41.0f / 255);
-
+			glNormal3f(face[f].facenorm.x, face[f].facenorm.y, face[f].facenorm.z);
 			glVertex3f(pt[iv].x, pt[iv].y, pt[iv].z);
 		}
 		glEnd();
