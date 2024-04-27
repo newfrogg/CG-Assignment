@@ -21,3 +21,6 @@ g++ -g main.cpp -std=c++11 src/*.cpp -lGL -lGLU -lglut -lm -Iinclude -Isrc -o ma
 ```
 ### Debug with vscode
 Config files **.vscode** folder as my setting.
+
+## Others
+Useful tools: [HTML color code](https://html-color.codes/image) extract code of colors within an image or a picture. 
