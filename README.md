@@ -1,4 +1,4 @@
-# OpenGL template
+# OpenGL simple template
 This is a project with setups to work with opengl on linux (freeglut) with vscode as the main editor.
 
 ## Prequisted
