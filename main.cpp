@@ -71,14 +71,13 @@ float camera_X, camera_Y, camera_Z;
 float lookAt_X, lookAt_Y, lookAt_Z;
 
 /// Mesh of Objects
-Base 	 crossbase 			 = Base(fMainHeight, fGrooveHeight, fMainWidth, fSubWidth, fGrooveWidth, fLength);
-Cylinder latchCylinderX 	 = Cylinder(20, latchCylinder_height, latchCylinder_radius);
-Cylinder latchCylinderZ 	 = Cylinder(20, latchCylinder_height, latchCylinder_radius);
+Base crossbase = Base(fMainHeight, fGrooveHeight, fMainWidth, fSubWidth, fGrooveWidth, fLength);
+Cylinder latchCylinderX = Cylinder(20, latchCylinder_height, latchCylinder_radius);
+Cylinder latchCylinderZ = Cylinder(20, latchCylinder_height, latchCylinder_radius);
 Cylinder latchCylinderCenter = Cylinder(20, latchCylinder_height, latchCylinder_radius);
-Bar 	 tiebar 			 = Bar(tieBar_height, tieBar_short_width, tieBar_long_width, tieBar_length);
-Cube 	 sliderX 			 = Cube(0.5);
-Cube 	 sliderZ 			 = Cube(0.5);
-
+Bar tiebar = Bar(tieBar_height, tieBar_short_width, tieBar_long_width, tieBar_length);
+Cube sliderX = Cube(0.5);
+Cube sliderZ = Cube(0.5);
 
 // Opengl coordinate convention
 // x-axis extends to the right
@@ -134,34 +133,137 @@ void setMaterial(float ar, float ag, float ab,
 }
 void setLight()
 {
-	const GLfloat leftLightDiffColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
-	const GLfloat leftLightSpecColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
-	const GLfloat leftLightAmbColor[] = {0.1f, 0.1f, 0.1f, 1.0f};
-	const GLfloat leftLightPos[] = {0.0, 0.0, -1.0, 0.0};
+	float ambient[4] = {0.8f, 0.8f, 0.8f, 1.0f};
+	float specular[4] = {0.3f, 0.3f, 0.3f, 1.0f};
+	float diffuse[4] = {1.0f, 1.0f, 1.0f, 1.0f};
+	float position[4] = {-10.0f, 5.0f, -10.0f, 0.0f};
 
-	const GLfloat rightLightDiffColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
-	const GLfloat rightLightSpecColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
-	const GLfloat rightLightAmbColor[] = {0.1f, 0.1f, 0.1f, 1.0f};
-	const GLfloat rightLightPos[] = {0.0, 0.0, 1.0, 0.0};
-
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_LIGHTING);
-	glEnable(GL_NORMALIZE);
-	// glShadeModel(GL_SMOOTH);
-
-	// set up right light
-	glLightfv(GL_LIGHT0, GL_POSITION, rightLightPos);
-	glLightfv(GL_LIGHT0, GL_AMBIENT, rightLightAmbColor);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, rightLightDiffColor);
-	glLightfv(GL_LIGHT0, GL_SPECULAR, rightLightSpecColor);
+	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
+	glLightfv(GL_LIGHT0, GL_POSITION, position);
 	glEnable(GL_LIGHT0);
+	glEnable(GL_LIGHTING);
+	glShadeModel(GL_SMOOTH);
+}
 
-	// set up left light
-	glLightfv(GL_LIGHT1, GL_POSITION, leftLightPos);
-	glLightfv(GL_LIGHT1, GL_AMBIENT, leftLightAmbColor);
-	glLightfv(GL_LIGHT1, GL_DIFFUSE, leftLightDiffColor);
-	glLightfv(GL_LIGHT1, GL_SPECULAR, leftLightSpecColor);
-	glEnable(GL_LIGHT1);
+void drawMainbar()
+{
+	glPushMatrix();
+	if (e_colorMode == Colored)
+	{
+		setMaterial(0, 0, 1,
+					1.0, 0.0, 0.0,
+					1.0, 1.0, 1.0);
+		crossbase.Draw();
+	}
+	else
+	{
+		crossbase.DrawWireframe();
+	}
+	glPopMatrix();
+}
+
+void drawTiebar()
+{
+	glPushMatrix();
+	glTranslatef(0, fMainHeight + tieBar_height, 0);
+	glTranslatef(sliderX_pos / 2, 0, sliderZ_pos / 2);
+	glRotatef(m_angle, 0, 1, 0);
+	glRotatef(180, 1, 0, 0);
+
+	if (e_colorMode == Colored)
+	{
+		setMaterial(232.0f / 255, 137.0f / 255, 048.0f / 255,
+					1.0, 0.0, 0.0,
+					1.0, 1.0, 1.0);
+		tiebar.Draw();
+	}
+	else
+	{
+		tiebar.DrawWireframe();
+	}
+	glPopMatrix();
+}
+void draw_3_latch()
+{
+	glPushMatrix();
+	glTranslatef(0, latchCylinder_height / 2 + 0.2, 0);
+	glTranslatef(sliderX_pos, fGrooveHeight, 0);
+
+	if (e_colorMode == Colored)
+	{
+		setMaterial(1, 0, 0,
+					1.0, 0.0, 0.0,
+					1.0, 1.0, 1.0);
+		latchCylinderX.Draw();
+	}
+	else
+	{
+		latchCylinderX.DrawWireframe();
+	}
+
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(0, latchCylinder_height / 2 + 0.2, 0);
+	glTranslatef(0, fGrooveHeight, sliderZ_pos);
+	if (e_colorMode == Colored)
+	{
+		latchCylinderZ.Draw();
+	}
+	else
+	{
+		latchCylinderZ.DrawWireframe();
+	}
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(0, latchCylinder_height / 2 + fMainHeight + 0.01, 0);
+	glTranslatef(sliderX_pos / 2, 0, sliderZ_pos / 2);
+	if (e_colorMode == Colored)
+	{
+		latchCylinderCenter.Draw();
+	}
+	else
+	{
+		latchCylinderCenter.DrawWireframe();
+	}
+	glPopMatrix();
+}
+
+void draw_2_slider()
+{
+	glPushMatrix();
+	glScalef(slider_length, slider_height, slider_width);
+	glTranslatef(0, fMainHeight, 0);
+	glTranslatef(sliderX_pos, fGrooveHeight, 0);
+	if (e_colorMode == Colored)
+	{
+		setMaterial(254.0f / 255, 250.0f / 255, 43.0f / 255,
+					1.0, 0.0, 0.0,
+					1.0, 1.0, 1.0);
+		sliderX.Draw();
+	}
+	else
+	{
+		sliderX.DrawWireframe();
+	}
+	glPopMatrix();
+
+	glPushMatrix();
+	glScalef(slider_width, slider_height, slider_length);
+	glTranslatef(0, fMainHeight, 0);
+	glTranslatef(0, fGrooveHeight, sliderZ_pos);
+	if (e_colorMode == Colored)
+	{
+		sliderZ.Draw();
+	}
+	else
+	{
+		sliderZ.DrawWireframe();
+	}
+	glPopMatrix();
 }
 
 void myDisplay()
@@ -178,7 +280,10 @@ void myDisplay()
 			- set material not ready maybe the issue.
 			- black and red are mostly displayed.
 	*/
-	// setLight();
+	if (e_colorMode == Colored)
+		setLight();
+	else
+		glDisable(GL_LIGHT0);
 
 	// Allowing the matrix operation applied onto current modelview matrix stack
 	// Comparing with GL_PROJECTION which is used to specify the projection transformation determining how 3d objects are
@@ -200,83 +305,27 @@ void myDisplay()
 	/// local y-axis map to axis-Z in real world
 	/// The height is always the axis-Y
 	/// CHANGE MODE BETWEEN DRAW COLORED OR WIREFRAME IS ALSO ALLOWED.
-
-	
 	glViewport(0, 0, screenWidth, screenHeight);
 	{
-
 		//// Local ROTATE ALLOWED
 		glPushMatrix();
 		glRotatef(m_angleX, 1, 0, 0);
 		glRotatef(m_angleZ, 0, 0, 1);
+		// Display Main CrossBar
+		drawMainbar();
+		// Display the Tie bar (connecting object)
+		drawTiebar();
+		// Display 3 latch cylinder
+		draw_3_latch();
+		// Display 2 slider
+		draw_2_slider();
 
-		{
-			// Display Main CrossBar
-			glPushMatrix();
-			setMaterial(0.1, 0.1, 0.1,
-						1.0, 0.0, 0.0,
-						1.0, 1.0, 1.0);
-			e_colorMode == Colored ? crossbase.Draw() : crossbase.DrawWireframe();
-			glPopMatrix();
-			// Display the Tie bar (connecting object)
-			glPushMatrix();
-			glTranslatef(0, fMainHeight + tieBar_height, 0);
-			glTranslatef(sliderX_pos / 2, 0, sliderZ_pos / 2);
-			glRotatef(m_angle, 0, 1, 0);
-			glRotatef(180, 1, 0, 0);
-
-			if (e_colorMode == Colored)
-			{
-				setMaterial(0.1, 0.2, 0.1,
-							1.0, 0.0, 0.0,
-							1.0, 1.0, 1.0);
-				tiebar.Draw();
-			}
-			else
-			{
-				glColor3f(0, 0, 1);
-				tiebar.DrawWireframe();
-			}
-			glPopMatrix();
-			// Display 3 latch cylinder
-			glPushMatrix();
-			glTranslatef(0, latchCylinder_height / 2 + 0.2, 0);
-			glTranslatef(sliderX_pos, fGrooveHeight, 0);
-			e_colorMode == Colored ? latchCylinderX.Draw() : latchCylinderX.DrawWireframe();
-			glPopMatrix();
-
-			glPushMatrix();
-			glTranslatef(0, latchCylinder_height / 2 + 0.2, 0);
-			glTranslatef(0, fGrooveHeight, sliderZ_pos);
-			e_colorMode == Colored ? latchCylinderZ.Draw() : latchCylinderZ.DrawWireframe();
-			glPopMatrix();
-
-			glPushMatrix();
-			glTranslatef(0, latchCylinder_height / 2 + fMainHeight + 0.01, 0);
-			glTranslatef(sliderX_pos / 2, 0, sliderZ_pos / 2);
-			e_colorMode == Colored ? latchCylinderCenter.Draw() : latchCylinderCenter.DrawWireframe();
-			glPopMatrix();
-			// Display 2 slider
-			glPushMatrix();
-			glScalef(slider_length, slider_height, slider_width);
-			glTranslatef(0, fMainHeight, 0);
-			glTranslatef(sliderX_pos, fGrooveHeight, 0);
-			e_colorMode == Colored ? sliderX.Draw() : sliderX.DrawWireframe();
-			glPopMatrix();
-
-			glPushMatrix();
-			glScalef(slider_width, slider_height, slider_length);
-			glTranslatef(0, fMainHeight, 0);
-			glTranslatef(0, fGrooveHeight, sliderZ_pos);
-			e_colorMode == Colored ? sliderZ.Draw() : sliderZ.DrawWireframe();
-			glPopMatrix();
-		}
 		glPopMatrix();
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////// END OF VIEW PORT /////////////////////////////////////////////////
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	}
-
+	glutPostRedisplay();
 	// Perform rendering operations
 	glFlush();
 	glutSwapBuffers();
@@ -417,6 +466,7 @@ void myInit()
 	float fHalfSize = 12;
 	// rgba format
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+
 	// Set orientation of front-facing polygon: [C]ounter[C]lock[W]ise
 	// Another option is GL_CW
 	// front-facing means the front ground of a picture
@@ -457,7 +507,6 @@ int main(int argc, char *argv[])
 	latchCylinderCenter.create();
 	sliderX.create();
 	sliderZ.create();
-
 
 	// Init opengl environment
 	myInit();
