@@ -1,4 +1,4 @@
-# OpenGL template
+# OpenGL simple template
 This is a project with setups to work with opengl on linux (freeglut) with vscode as the main editor.
 
 ## Prequisted
@@ -10,13 +10,10 @@ sudo apt-get install freeglut3-dev
 ## Build & Run
 - __Build__:
 
-**In c:** 
+
 ```bash
-gcc main.c -lGL -lGLU -lglut 
-```
-**In cpp:**
-```bash
-g++ filename.c -lGL -lGLU -lglut
+// C++
+g++ -g main.cpp -std=c++11 src/*.cpp -lGL -lGLU -lglut -lm -Iinclude -Isrc -o main
 ```
 - __Run__:
 ```bash
@@ -24,3 +21,6 @@ g++ filename.c -lGL -lGLU -lglut
 ```
 ### Debug with vscode
 Config files **.vscode** folder as my setting.
+
+## Others
+Useful tools: [HTML color code](https://html-color.codes/image) extract code of colors within an image or a picture. 
