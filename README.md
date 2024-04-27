@@ -10,13 +10,10 @@ sudo apt-get install freeglut3-dev
 ## Build & Run
 - __Build__:
 
-**In c:** 
+
 ```bash
-gcc main.c -lGL -lGLU -lglut 
-```
-**In cpp:**
-```bash
-g++ filename.c -lGL -lGLU -lglut
+// C++
+g++ -g main.cpp -std=c++11 src/*.cpp -lGL -lGLU -lglut -lm -Iinclude -Isrc -o main
 ```
 - __Run__:
 ```bash
