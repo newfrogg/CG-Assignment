@@ -134,9 +134,9 @@ void setMaterial(float ar, float ag, float ab,
 void setLight()
 {
 	float ambient[4] = {0.8f, 0.8f, 0.8f, 1.0f};
-	float specular[4] = {0.3f, 0.3f, 0.3f, 1.0f};
+	float specular[4] = {0.0f, 0.0f, 0.0f, 1.0f};
 	float diffuse[4] = {1.0f, 1.0f, 1.0f, 1.0f};
-	float position[4] = {-10.0f, 5.0f, -10.0f, 0.0f};
+	float position[4] = {-10.0f, -5.0f, -10.0f, 0.0f};
 
 	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
@@ -144,7 +144,6 @@ void setLight()
 	glLightfv(GL_LIGHT0, GL_POSITION, position);
 	glEnable(GL_LIGHT0);
 	glEnable(GL_LIGHTING);
-	glShadeModel(GL_SMOOTH);
 }
 
 void drawMainbar()
@@ -152,10 +151,10 @@ void drawMainbar()
 	glPushMatrix();
 	if (e_colorMode == Colored)
 	{
-		setMaterial(0, 0, 1,
+		setMaterial(1, 0, 0,
 					1.0, 0.0, 0.0,
 					1.0, 1.0, 1.0);
-		crossbase.Draw();
+		crossbase.DrawColor();
 	}
 	else
 	{
@@ -174,7 +173,7 @@ void drawTiebar()
 
 	if (e_colorMode == Colored)
 	{
-		setMaterial(232.0f / 255, 137.0f / 255, 048.0f / 255,
+		setMaterial(0, 1, 0,
 					1.0, 0.0, 0.0,
 					1.0, 1.0, 1.0);
 		tiebar.Draw();
@@ -193,7 +192,7 @@ void draw_3_latch()
 
 	if (e_colorMode == Colored)
 	{
-		setMaterial(1, 0, 0,
+		setMaterial(1, 1, 0,
 					1.0, 0.0, 0.0,
 					1.0, 1.0, 1.0);
 		latchCylinderX.Draw();
@@ -240,7 +239,7 @@ void draw_2_slider()
 	glTranslatef(sliderX_pos, fGrooveHeight, 0);
 	if (e_colorMode == Colored)
 	{
-		setMaterial(254.0f / 255, 250.0f / 255, 43.0f / 255,
+		setMaterial(0, 0 ,1,
 					1.0, 0.0, 0.0,
 					1.0, 1.0, 1.0);
 		sliderX.Draw();
