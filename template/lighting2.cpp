@@ -33,9 +33,9 @@ void init()
 }
 void setLight()
 {
-	const GLfloat leftLightDiffColor[] = {1.0f, 0.0f, 0.0f, 1.0f};
-	const GLfloat leftLightSpecColor[] = {1.0f, 0.75f, 0.0f, 1.0f};
 	const GLfloat leftLightAmbColor[] = {0.1f, 0.1f, 0.1f, 1.0f};
+	const GLfloat leftLightSpecColor[] = {1.0f, 0.75f, 0.0f, 1.0f};
+	const GLfloat leftLightDiffColor[] = {1.0f, 0.0f, 0.0f, 1.0f};
 	const GLfloat leftLightPos[] = {-5.0, 0.0, 0.0, 0.0};
 
 	const GLfloat rightLightDiffColor[] = {0.0f, 0.0f, 1.0f, 1.0f};

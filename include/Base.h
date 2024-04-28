@@ -16,4 +16,5 @@ public:
 
     void create();
     void Draw();
+    void CalculateFacesNorm();
 };

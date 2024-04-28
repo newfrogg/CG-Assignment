@@ -133,17 +133,39 @@ void setMaterial(float ar, float ag, float ab,
 }
 void setLight()
 {
+	glEnable(GL_LIGHTING);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_NORMALIZE);
+
 	float ambient[4] = {0.8f, 0.8f, 0.8f, 1.0f};
 	float specular[4] = {0.0f, 0.0f, 0.0f, 1.0f};
 	float diffuse[4] = {1.0f, 1.0f, 1.0f, 1.0f};
 	float position[4] = {-10.0f, -5.0f, -10.0f, 0.0f};
 
-	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
-	glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
-	glLightfv(GL_LIGHT0, GL_POSITION, position);
-	glEnable(GL_LIGHT0);
-	glEnable(GL_LIGHTING);
+	const GLfloat leftLightAmbColor[] = {0.1f, 0.1f, 0.1f, 1.0f};
+	const GLfloat leftLightSpecColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
+	const GLfloat leftLightDiffColor[] = {1.0f, 0.0f, 0.0f, 1.0f};
+	const GLfloat leftLightPos[] = {-5.0, -10.0, -5.0, 0.0};
+
+	const GLfloat rightLightDiffColor[] = {0.0f, 0.0f, 1.0f, 1.0f};
+	const GLfloat rightLightSpecColor[] = {0.54, 0.17, 0.89, 1.0f};
+	const GLfloat rightLightAmbColor[] = {0.1f, 0.1f, 0.1f, 1.0f};
+	const GLfloat rightLightPos[] = {5.0, 0.0, 0.0, 0.0};
+
+	// set up right light
+	glLightfv(GL_LIGHT0, GL_POSITION, rightLightPos);
+	glLightfv(GL_LIGHT0, GL_AMBIENT, rightLightAmbColor);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, rightLightDiffColor);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, rightLightSpecColor);
+	// glEnable(GL_LIGHT0);
+
+	// set up left light
+	glLightfv(GL_LIGHT1, GL_POSITION, leftLightPos);
+	glLightfv(GL_LIGHT1, GL_AMBIENT, leftLightAmbColor);
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, leftLightDiffColor);
+	glLightfv(GL_LIGHT1, GL_SPECULAR, leftLightSpecColor);
+	glEnable(GL_LIGHT1);
+
 }
 
 void drawMainbar()
@@ -154,7 +176,7 @@ void drawMainbar()
 		setMaterial(1, 0, 0,
 					1.0, 0.0, 0.0,
 					1.0, 1.0, 1.0);
-		crossbase.DrawColor();
+		crossbase.Draw();
 	}
 	else
 	{
@@ -506,7 +528,7 @@ void showInstructions() {
 int main(int argc, char *argv[])
 {
 	// Display instruction to control the application
-	showInstructions();
+	// showInstructions();
 	// Opengl Main display program
 	glutInit(&argc, (char **)argv);							  // initialize the tool kit
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH); // set the display mode
@@ -518,12 +540,19 @@ int main(int argc, char *argv[])
 	//////  CREATE OBJECTS 
 	////////////////////////////////////////////////////////////////////////
 	crossbase.create();
+	crossbase.CalculateFacesNorm();
 	tiebar.create();
+	tiebar.CalculateFacesNorm();
 	latchCylinderX.create();
+	latchCylinderX.CalculateFacesNorm();
 	latchCylinderZ.create();
+	latchCylinderZ.CalculateFacesNorm();
 	latchCylinderCenter.create();
+	latchCylinderCenter.CalculateFacesNorm();
 	sliderX.create();
+	sliderX.CalculateFacesNorm();
 	sliderZ.create();
+	sliderZ.CalculateFacesNorm();
 	// Init opengl environment
 	myInit();
 	// Function to display main presentation
