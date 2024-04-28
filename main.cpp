@@ -137,27 +137,10 @@ void setLight()
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_NORMALIZE);
 
-	float ambient[4] = {0.8f, 0.8f, 0.8f, 1.0f};
-	float specular[4] = {0.0f, 0.0f, 0.0f, 1.0f};
-	float diffuse[4] = {1.0f, 1.0f, 1.0f, 1.0f};
-	float position[4] = {-10.0f, -5.0f, -10.0f, 0.0f};
-
 	const GLfloat leftLightAmbColor[] = {0.1f, 0.1f, 0.1f, 1.0f};
-	const GLfloat leftLightSpecColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
-	const GLfloat leftLightDiffColor[] = {1.0f, 0.0f, 0.0f, 1.0f};
-	const GLfloat leftLightPos[] = {-5.0, -10.0, -5.0, 0.0};
-
-	const GLfloat rightLightDiffColor[] = {0.0f, 0.0f, 1.0f, 1.0f};
-	const GLfloat rightLightSpecColor[] = {0.54, 0.17, 0.89, 1.0f};
-	const GLfloat rightLightAmbColor[] = {0.1f, 0.1f, 0.1f, 1.0f};
-	const GLfloat rightLightPos[] = {5.0, 0.0, 0.0, 0.0};
-
-	// set up right light
-	glLightfv(GL_LIGHT0, GL_POSITION, rightLightPos);
-	glLightfv(GL_LIGHT0, GL_AMBIENT, rightLightAmbColor);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, rightLightDiffColor);
-	glLightfv(GL_LIGHT0, GL_SPECULAR, rightLightSpecColor);
-	// glEnable(GL_LIGHT0);
+	const GLfloat leftLightSpecColor[] = {0.0f, 0.0f, 0.0f, 1.0f};
+	const GLfloat leftLightDiffColor[] = {1.0f, 1.0f, 0.0f, 1.0f};
+	const GLfloat leftLightPos[] = {-5.0, -5.0, -5.0, 0.0};
 
 	// set up left light
 	glLightfv(GL_LIGHT1, GL_POSITION, leftLightPos);
@@ -196,7 +179,7 @@ void drawTiebar()
 	if (e_colorMode == Colored)
 	{
 		setMaterial(0, 1, 0,
-					1.0, 0.0, 0.0,
+					0.0, 0.0, 0.0,
 					1.0, 1.0, 1.0);
 		tiebar.Draw();
 	}
@@ -215,7 +198,7 @@ void draw_3_latch()
 	if (e_colorMode == Colored)
 	{
 		setMaterial(1, 1, 0,
-					1.0, 0.0, 0.0,
+					1.0, 1.0, 0.0,
 					1.0, 1.0, 1.0);
 		latchCylinderX.Draw();
 	}
@@ -262,7 +245,7 @@ void draw_2_slider()
 	if (e_colorMode == Colored)
 	{
 		setMaterial(0, 0 ,1,
-					1.0, 0.0, 0.0,
+					0.0, 0.0, 0.0,
 					1.0, 1.0, 1.0);
 		sliderX.Draw();
 	}
@@ -429,13 +412,13 @@ void myKeyboard(unsigned char key, int x, int y)
 	}
 	case '+':
 	{
-		camera_dis += 0.6f;
+		camera_dis += 0.9f;
 		changeCameraPos();
 		break;
 	}
 	case '-':
 	{
-		camera_dis -= 0.6f;
+		camera_dis -= 0.9f;
 		changeCameraPos();
 		break;
 	}
@@ -458,19 +441,19 @@ void mySpecialKeyboard(int key, int x, int y)
 	switch (key)
 	{
 	case GLUT_KEY_UP:
-		camera_height += 0.6f;
+		camera_height += 0.9f;
 		changeCameraPos();
 		break;
 	case GLUT_KEY_DOWN:
-		camera_height -= 0.6f;
+		camera_height -= 0.9f;
 		changeCameraPos();
 		break;
 	case GLUT_KEY_RIGHT:
-		camera_angle += 0.6f;
+		camera_angle += 0.9f;
 		changeCameraPos();
 		break;
 	case GLUT_KEY_LEFT:
-		camera_angle -= 0.6f;
+		camera_angle -= 0.9f;
 		changeCameraPos();
 		break;
 	default:

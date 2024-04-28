@@ -184,6 +184,7 @@ void Base::create()
 			face[fei].vert[2].vertIndex = 6 * quarter_bot_and_top + 1;
 			face[fei].vert[3].vertIndex = 6 * quarter_bot_and_top + 0;
 		}
+
 		fei++;
 		face[fei].nVerts = 4;
 		face[fei].vert = new VertexID[face[fei].nVerts];
@@ -207,45 +208,106 @@ void Base::create()
 	{
 		face[fei].nVerts = 4;
 		face[fei].vert = new VertexID[face[fei].nVerts];
-		face[fei].vert[3].vertIndex = 6 * quarter + 0;
-		face[fei].vert[2].vertIndex = 6 * quarter + 1;
-		face[fei].vert[1].vertIndex = 6 * (quarter + 4) + 1;
-		face[fei].vert[0].vertIndex = 6 * (quarter + 4) + 0;
+		if (quarter == 0 || quarter == 3)
+		{
+			face[fei].vert[3].vertIndex = 6 * quarter + 0;
+			face[fei].vert[2].vertIndex = 6 * quarter + 1;
+			face[fei].vert[1].vertIndex = 6 * (quarter + 4) + 1;
+			face[fei].vert[0].vertIndex = 6 * (quarter + 4) + 0;
+		}
+		else
+		{
+			face[fei].vert[0].vertIndex = 6 * quarter + 0;
+			face[fei].vert[1].vertIndex = 6 * quarter + 1;
+			face[fei].vert[2].vertIndex = 6 * (quarter + 4) + 1;
+			face[fei].vert[3].vertIndex = 6 * (quarter + 4) + 0;
+		}
 		fei++;
 		face[fei].nVerts = 4;
 		face[fei].vert = new VertexID[face[fei].nVerts];
-		face[fei].vert[3].vertIndex = 6 * quarter + 1;
-		face[fei].vert[2].vertIndex = 6 * quarter + 2;
-		face[fei].vert[1].vertIndex = 6 * (quarter + 4) + 2;
-		face[fei].vert[0].vertIndex = 6 * (quarter + 4) + 1;
+		if (quarter != 0 && quarter != 1)
+		{
+			face[fei].vert[3].vertIndex = 6 * quarter + 1;
+			face[fei].vert[2].vertIndex = 6 * quarter + 2;
+			face[fei].vert[1].vertIndex = 6 * (quarter + 4) + 2;
+			face[fei].vert[0].vertIndex = 6 * (quarter + 4) + 1;
+		}
+		else
+		{
+			face[fei].vert[0].vertIndex = 6 * quarter + 1;
+			face[fei].vert[1].vertIndex = 6 * quarter + 2;
+			face[fei].vert[2].vertIndex = 6 * (quarter + 4) + 2;
+			face[fei].vert[3].vertIndex = 6 * (quarter + 4) + 1;
+		}
+		fei++;
+		face[fei].nVerts = 4;
+		if (quarter % 2)
+		{
+			face[fei].vert = new VertexID[face[fei].nVerts];
+			face[fei].vert[3].vertIndex = 6 * quarter + 2;
+			face[fei].vert[2].vertIndex = 6 * quarter + 3;
+			face[fei].vert[1].vertIndex = 6 * (quarter + 4) + 3;
+			face[fei].vert[0].vertIndex = 6 * (quarter + 4) + 2;
+		}
+		else
+		{
+			face[fei].vert = new VertexID[face[fei].nVerts];
+			face[fei].vert[0].vertIndex = 6 * quarter + 2;
+			face[fei].vert[1].vertIndex = 6 * quarter + 3;
+			face[fei].vert[2].vertIndex = 6 * (quarter + 4) + 3;
+			face[fei].vert[3].vertIndex = 6 * (quarter + 4) + 2;
+		}
 		fei++;
 		face[fei].nVerts = 4;
 		face[fei].vert = new VertexID[face[fei].nVerts];
-		face[fei].vert[3].vertIndex = 6 * quarter + 2;
-		face[fei].vert[2].vertIndex = 6 * quarter + 3;
-		face[fei].vert[1].vertIndex = 6 * (quarter + 4) + 3;
-		face[fei].vert[0].vertIndex = 6 * (quarter + 4) + 2;
+		if (quarter == 0 || quarter == 1)
+		{
+			face[fei].vert[3].vertIndex = 6 * quarter + 3;
+			face[fei].vert[2].vertIndex = 6 * quarter + 4;
+			face[fei].vert[1].vertIndex = 6 * (quarter + 4) + 4;
+			face[fei].vert[0].vertIndex = 6 * (quarter + 4) + 3;
+		}
+		else
+		{
+			face[fei].vert[0].vertIndex = 6 * quarter + 3;
+			face[fei].vert[1].vertIndex = 6 * quarter + 4;
+			face[fei].vert[2].vertIndex = 6 * (quarter + 4) + 4;
+			face[fei].vert[3].vertIndex = 6 * (quarter + 4) + 3;
+		}
 		fei++;
 		face[fei].nVerts = 4;
 		face[fei].vert = new VertexID[face[fei].nVerts];
-		face[fei].vert[3].vertIndex = 6 * quarter + 3;
-		face[fei].vert[2].vertIndex = 6 * quarter + 4;
-		face[fei].vert[1].vertIndex = 6 * (quarter + 4) + 4;
-		face[fei].vert[0].vertIndex = 6 * (quarter + 4) + 3;
+		if (quarter == 1 || quarter == 2)
+		{
+			face[fei].vert[3].vertIndex = 6 * quarter + 4;
+			face[fei].vert[2].vertIndex = 6 * quarter + 5;
+			face[fei].vert[1].vertIndex = 6 * (quarter + 4) + 5;
+			face[fei].vert[0].vertIndex = 6 * (quarter + 4) + 4;
+		}
+		else
+		{
+			face[fei].vert[0].vertIndex = 6 * quarter + 4;
+			face[fei].vert[1].vertIndex = 6 * quarter + 5;
+			face[fei].vert[2].vertIndex = 6 * (quarter + 4) + 5;
+			face[fei].vert[3].vertIndex = 6 * (quarter + 4) + 4;
+		}
 		fei++;
 		face[fei].nVerts = 4;
 		face[fei].vert = new VertexID[face[fei].nVerts];
-		face[fei].vert[3].vertIndex = 6 * quarter + 4;
-		face[fei].vert[2].vertIndex = 6 * quarter + 5;
-		face[fei].vert[1].vertIndex = 6 * (quarter + 4) + 5;
-		face[fei].vert[0].vertIndex = 6 * (quarter + 4) + 4;
-		fei++;
-		face[fei].nVerts = 4;
-		face[fei].vert = new VertexID[face[fei].nVerts];
-		face[fei].vert[3].vertIndex = 6 * quarter + 5;
-		face[fei].vert[2].vertIndex = 6 * quarter + 0;
-		face[fei].vert[1].vertIndex = 6 * (quarter + 4) + 0;
-		face[fei].vert[0].vertIndex = 6 * (quarter + 4) + 5;
+		if (quarter == 0 || quarter == 1)
+		{
+			face[fei].vert[3].vertIndex = 6 * quarter + 5;
+			face[fei].vert[2].vertIndex = 6 * quarter + 0;
+			face[fei].vert[1].vertIndex = 6 * (quarter + 4) + 0;
+			face[fei].vert[0].vertIndex = 6 * (quarter + 4) + 5;
+		}
+		else
+		{
+			face[fei].vert[0].vertIndex = 6 * quarter + 5;
+			face[fei].vert[1].vertIndex = 6 * quarter + 0;
+			face[fei].vert[2].vertIndex = 6 * (quarter + 4) + 0;
+			face[fei].vert[3].vertIndex = 6 * (quarter + 4) + 5;
+		}
 		fei++;
 	}
 	/*
@@ -255,7 +317,7 @@ void Base::create()
 	{
 		face[fei].nVerts = 4;
 		face[fei].vert = new VertexID[face[fei].nVerts];
-		if (half_quarter_bot_and_top % 2)
+		if (half_quarter_bot_and_top % 2 == 1)
 		{
 			face[fei].vert[0].vertIndex = 50 + 4 * half_quarter_bot_and_top + 0;
 			face[fei].vert[1].vertIndex = 50 + 4 * half_quarter_bot_and_top + 1;
@@ -275,10 +337,20 @@ void Base::create()
 	{
 		face[fei].nVerts = 4;
 		face[fei].vert = new VertexID[face[fei].nVerts];
-		face[fei].vert[0].vertIndex = 50 + 4 * half_quarter + 0;
-		face[fei].vert[1].vertIndex = 50 + 4 * half_quarter + 1;
-		face[fei].vert[2].vertIndex = 50 + 4 * (half_quarter + 2) + 1;
-		face[fei].vert[3].vertIndex = 50 + 4 * (half_quarter + 2) + 0;
+		if (half_quarter == 0)
+		{
+			face[fei].vert[0].vertIndex = 50 + 4 * half_quarter + 0;
+			face[fei].vert[1].vertIndex = 50 + 4 * half_quarter + 1;
+			face[fei].vert[2].vertIndex = 50 + 4 * (half_quarter + 2) + 1;
+			face[fei].vert[3].vertIndex = 50 + 4 * (half_quarter + 2) + 0;
+		}
+		else
+		{
+			face[fei].vert[3].vertIndex = 50 + 4 * half_quarter + 0;
+			face[fei].vert[2].vertIndex = 50 + 4 * half_quarter + 1;
+			face[fei].vert[1].vertIndex = 50 + 4 * (half_quarter + 2) + 1;
+			face[fei].vert[0].vertIndex = 50 + 4 * (half_quarter + 2) + 0;
+		}
 		fei++;
 		face[fei].nVerts = 4;
 		face[fei].vert = new VertexID[face[fei].nVerts];
@@ -289,10 +361,20 @@ void Base::create()
 		fei++;
 		face[fei].nVerts = 4;
 		face[fei].vert = new VertexID[face[fei].nVerts];
-		face[fei].vert[0].vertIndex = 50 + 4 * half_quarter + 2;
-		face[fei].vert[1].vertIndex = 50 + 4 * half_quarter + 3;
-		face[fei].vert[2].vertIndex = 50 + 4 * (half_quarter + 2) + 3;
-		face[fei].vert[3].vertIndex = 50 + 4 * (half_quarter + 2) + 2;
+		if (half_quarter == 0)
+		{
+			face[fei].vert[0].vertIndex = 50 + 4 * half_quarter + 2;
+			face[fei].vert[1].vertIndex = 50 + 4 * half_quarter + 3;
+			face[fei].vert[2].vertIndex = 50 + 4 * (half_quarter + 2) + 3;
+			face[fei].vert[3].vertIndex = 50 + 4 * (half_quarter + 2) + 2;
+		}
+		else
+		{
+			face[fei].vert[3].vertIndex = 50 + 4 * half_quarter + 2;
+			face[fei].vert[2].vertIndex = 50 + 4 * half_quarter + 3;
+			face[fei].vert[1].vertIndex = 50 + 4 * (half_quarter + 2) + 3;
+			face[fei].vert[0].vertIndex = 50 + 4 * (half_quarter + 2) + 2;
+		}
 		fei++;
 		face[fei].nVerts = 4;
 		face[fei].vert = new VertexID[face[fei].nVerts];
@@ -397,28 +479,30 @@ void Base::CalculateFacesNorm()
 	float dx, dy, dz;
 	int idx, next;
 	for (int f = 0; f < numFaces; f++)
-		// for (int f = 0; f < 16; f++)
-		// for (int f = 16; f < 16 + 6*4; f++)
-		// for (int f = 0; f < 48; f++)
-		// for (int f = 40; f < 48; f++)
-		// for (int f = 52; f < +2 * 4; f++)
+	// for (int f = 0; f < 16; f++)
+	// for (int f = 16; f < 22; f++)
+	// for (int f = 16; f < 22 + 6; f++)
+	// for (int f = 16; f < 22 + 6*3; f++)
+	// for (int f = 0; f < 48; f++)
+	// for (int f = 40; f < 48; f++)
+	// for (int f = 52; f < +2 * 4; f++)
+	{
+		dx = 0;
+		dy = 0;
+		dz = 0;
+		for (int v = 0; v < face[f].nVerts; v++)
 		{
-			dx = 0;
-			dy = 0;
-			dz = 0;
-			for (int v = 0; v < face[f].nVerts; v++)
-			{
-				idx = v;
-				next = (idx + 1) % face[f].nVerts;
+			idx = v;
+			next = (idx + 1) % face[f].nVerts;
 
-				int p1 = face[f].vert[idx].vertIndex;
-				int p2 = face[f].vert[next].vertIndex;
+			int p1 = face[f].vert[idx].vertIndex;
+			int p2 = face[f].vert[next].vertIndex;
 
-				dx = dx + (pt[p1].y - pt[p2].y) * (pt[p1].z + pt[p2].z);
-				dy = dy + (pt[p1].z - pt[p2].z) * (pt[p1].x + pt[p2].x);
-				dz = dz + (pt[p1].x - pt[p2].x) * (pt[p1].y + pt[p2].y);
-			}
-			face[f].facenorm.set(dx, dy, dz);
-			face[f].facenorm.normalize();
+			dx = dx + (pt[p1].y - pt[p2].y) * (pt[p1].z + pt[p2].z);
+			dy = dy + (pt[p1].z - pt[p2].z) * (pt[p1].x + pt[p2].x);
+			dz = dz + (pt[p1].x - pt[p2].x) * (pt[p1].y + pt[p2].y);
 		}
+		face[f].facenorm.set(dx, dy, dz);
+		face[f].facenorm.normalize();
+	}
 }
