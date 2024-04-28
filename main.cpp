@@ -25,6 +25,111 @@ enum cameraMode
 	__2D
 };
 
+void drawParallelo(float x, float y, float z, float square_size)
+{
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glBegin(GL_QUADS);
+	glColor4f(1.0, 0.1, 0.4, 1.0);
+	glNormal3f(0.0f, 1.0f, 0.0f);
+	glVertex3f(x, y, z);
+	glVertex3f(x + square_size, y, z);
+	glVertex3f(x + square_size, y, z + square_size);
+	glVertex3f(x, y, z + square_size);
+	glEnd();
+
+	glBegin(GL_QUADS);
+	glColor4f(1.0, 0.0, 1.0, 1.0);
+	glNormal3f(0.0f, 1.0f, 0.0f);
+	glVertex3f(x, y, z + square_size);
+	glVertex3f(x + square_size / 2, y, z + square_size * 3 / 2);
+	glVertex3f(x + square_size / 2, y, z + square_size * 2);
+	glVertex3f(x, y, z + square_size * 3 / 2);
+	glEnd();
+
+	glBegin(GL_QUADS);
+	glColor4f(0.0, 0.0, 0.0, 1.0);
+	glNormal3f(0.0f, 1.0f, 0.0f);
+	glVertex3f(x + square_size, y, z + square_size);
+	glVertex3f(x + square_size, y, z + square_size * 3 / 2);
+	glVertex3f(x + square_size / 2, y, z + square_size * 2);
+	glVertex3f(x + square_size / 2, y, z + square_size * 3 / 2);
+	glEnd();
+	glPopMatrix();
+
+	glBegin(GL_QUADS);
+	glColor4f(1.0, 0.0, 1.0, 1.0);
+	glNormal3f(0.0f, 1.0f, 0.0f);
+	glVertex3f(x + square_size, y, z + square_size);
+	glVertex3f(x + square_size * 3 / 2, y, z + square_size / 2);
+	glVertex3f(x + square_size * 2, y, z + square_size / 2);
+	glVertex3f(x + square_size * 3 / 2, y, z + square_size);
+	glEnd();
+
+	glBegin(GL_QUADS);
+	glColor4f(0.0, 0.0, 0.0, 1.0);
+	glNormal3f(0.0f, 1.0f, 0.0f);
+	glVertex3f(x + square_size, y, z);
+	glVertex3f(x + square_size * 3 / 2, y, z);
+	glVertex3f(x + square_size * 2, y, z + square_size / 2);
+	glVertex3f(x + square_size * 3 / 2, y, z + square_size / 2);
+	glEnd();
+
+	glBegin(GL_QUADS);
+	glColor4f(1.0, 0.0, 1.0, 1.0);
+	glNormal3f(0.0f, 1.0f, 0.0f);
+	glVertex3f(x + square_size, y, z);
+	glVertex3f(x + square_size, y, z - square_size / 2);
+	glVertex3f(x + square_size / 2, y, z - square_size);
+	glVertex3f(x + square_size / 2, y, z - square_size / 2);
+	glEnd();
+
+	glBegin(GL_QUADS);
+	glColor4f(0.0, 0.0, 0.0, 1.0);
+	glNormal3f(0.0f, 1.0f, 0.0f);
+	glVertex3f(x, y, z);
+	glVertex3f(x + square_size / 2, y, z - square_size / 2);
+	glVertex3f(x + square_size / 2, y, z - square_size);
+	glVertex3f(x, y, z - square_size / 2);
+	glEnd();
+
+	glBegin(GL_QUADS);
+	glColor4f(1.0, 0.0, 1.0, 1.0);
+	glNormal3f(0.0f, 1.0f, 0.0f);
+	glVertex3f(x, y, z);
+	glVertex3f(x - square_size / 2, y, z + square_size / 2);
+	glVertex3f(x - square_size, y, z + square_size / 2);
+	glVertex3f(x - square_size / 2, y, z);
+	glEnd();
+
+	glBegin(GL_QUADS);
+	glColor4f(0.0, 0.0, 0.0, 1.0);
+	glNormal3f(0.0f, 1.0f, 0.0f);
+	glVertex3f(x, y, z + square_size);
+	glVertex3f(x - square_size / 2, y, z + square_size);
+	glVertex3f(x - square_size, y, z + square_size / 2);
+	glVertex3f(x - square_size / 2, y, z + square_size / 2);
+
+	glEnd();
+
+	glPopMatrix();
+}
+
+void drawFloor()
+{
+	float y = 0;
+	glDisable(GL_LIGHTING);
+	glColor3f(1.0f, 1.0f, 1.0f);
+	for (float x = -90; x < 90; x += 3)
+	{
+		for (float z = -90; z < 90; z += 3)
+		{
+
+			drawParallelo(x, -10, z, 1);
+		}
+	}
+	glEnable(GL_LIGHTING);
+}
+
 /// Global display settings
 int screenWidth = 1080;
 int screenHeight = 720;
@@ -148,7 +253,6 @@ void setLight()
 	glLightfv(GL_LIGHT1, GL_DIFFUSE, leftLightDiffColor);
 	glLightfv(GL_LIGHT1, GL_SPECULAR, leftLightSpecColor);
 	glEnable(GL_LIGHT1);
-
 }
 
 void drawMainbar()
@@ -244,7 +348,7 @@ void draw_2_slider()
 	glTranslatef(sliderX_pos, fGrooveHeight, 0);
 	if (e_colorMode == Colored)
 	{
-		setMaterial(0, 0 ,1,
+		setMaterial(0, 0, 1,
 					0.0, 0.0, 0.0,
 					1.0, 1.0, 1.0);
 		sliderX.Draw();
@@ -309,6 +413,11 @@ void myDisplay()
 	/// local y-axis map to axis-Z in real world
 	/// The height is always the axis-Y
 	/// CHANGE MODE BETWEEN DRAW COLORED OR WIREFRAME IS ALSO ALLOWED.
+
+	glPushMatrix();
+	drawFloor();
+	glPopMatrix();
+
 	glViewport(0, 0, screenWidth, screenHeight);
 	{
 		//// Local ROTATE ALLOWED
@@ -493,20 +602,20 @@ void myInit()
 	camera_Z = cos(DEG2RAD(camera_angle)) * camera_dis;
 }
 
-void showInstructions() {
+void showInstructions()
+{
 	cout << "1, 2      : Xoay hinh chu thap xung quanh truc Y cuc bo\n";
-    cout << "3, 4      : Xoay hinh chu thap xung quanh truc X cuc bo\n";
-    cout << "5, 6      : Dich chuyen thanh truot\n";
-    cout << "W, w      : Chuyen doi qua lai giua che do khung day va to mau\n";
-    cout << "V, v  	   : Chuyen doi qua lai giua hai che do nhin\n";
-    cout << "+         : Tang khoang cach camera\n";
-    cout << "-     	   : Giam khoang cach camera\n";
-    cout << "up arrow  : Tang chieu cao camera\n";
-    cout << "down arrow: Giam chieu cao camera\n";
-    cout << "<-        : Quay camera theo chieu kim dong ho\n";
-    cout << "->        : Quay camera nguoc chieu kim dong ho\n";
+	cout << "3, 4      : Xoay hinh chu thap xung quanh truc X cuc bo\n";
+	cout << "5, 6      : Dich chuyen thanh truot\n";
+	cout << "W, w      : Chuyen doi qua lai giua che do khung day va to mau\n";
+	cout << "V, v  	   : Chuyen doi qua lai giua hai che do nhin\n";
+	cout << "+         : Tang khoang cach camera\n";
+	cout << "-     	   : Giam khoang cach camera\n";
+	cout << "up arrow  : Tang chieu cao camera\n";
+	cout << "down arrow: Giam chieu cao camera\n";
+	cout << "<-        : Quay camera theo chieu kim dong ho\n";
+	cout << "->        : Quay camera nguoc chieu kim dong ho\n";
 }
-
 
 int main(int argc, char *argv[])
 {
@@ -520,7 +629,7 @@ int main(int argc, char *argv[])
 	glutCreateWindow("Lab 3");								  // open the screen window
 
 	////////////////////////////////////////////////////////////////////////
-	//////  CREATE OBJECTS 
+	//////  CREATE OBJECTS
 	////////////////////////////////////////////////////////////////////////
 	crossbase.create();
 	crossbase.CalculateFacesNorm();
