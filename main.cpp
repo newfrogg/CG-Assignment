@@ -25,11 +25,11 @@ enum cameraMode
 	__2D
 };
 
-void drawParallelo(float x, float y, float z, float square_size)
+void drawPattern(float x, float y, float z, float square_size)
 {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glBegin(GL_QUADS);
-	glColor4f(1.0, 0.1, 0.4, 1.0);
+	glColor4f(1.0, 0.25, 0.25, 1.0);
 	glNormal3f(0.0f, 1.0f, 0.0f);
 	glVertex3f(x, y, z);
 	glVertex3f(x + square_size, y, z);
@@ -38,7 +38,7 @@ void drawParallelo(float x, float y, float z, float square_size)
 	glEnd();
 
 	glBegin(GL_QUADS);
-	glColor4f(1.0, 0.0, 1.0, 1.0);
+	glColor4f(0.0, 1.0, 1.0, 1.0);
 	glNormal3f(0.0f, 1.0f, 0.0f);
 	glVertex3f(x, y, z + square_size);
 	glVertex3f(x + square_size / 2, y, z + square_size * 3 / 2);
@@ -57,7 +57,7 @@ void drawParallelo(float x, float y, float z, float square_size)
 	glPopMatrix();
 
 	glBegin(GL_QUADS);
-	glColor4f(1.0, 0.0, 1.0, 1.0);
+	glColor4f(0.0, 1.0, 1.0, 1.0);
 	glNormal3f(0.0f, 1.0f, 0.0f);
 	glVertex3f(x + square_size, y, z + square_size);
 	glVertex3f(x + square_size * 3 / 2, y, z + square_size / 2);
@@ -75,7 +75,7 @@ void drawParallelo(float x, float y, float z, float square_size)
 	glEnd();
 
 	glBegin(GL_QUADS);
-	glColor4f(1.0, 0.0, 1.0, 1.0);
+	glColor4f(0.0, 1.0, 1.0, 1.0);
 	glNormal3f(0.0f, 1.0f, 0.0f);
 	glVertex3f(x + square_size, y, z);
 	glVertex3f(x + square_size, y, z - square_size / 2);
@@ -93,7 +93,7 @@ void drawParallelo(float x, float y, float z, float square_size)
 	glEnd();
 
 	glBegin(GL_QUADS);
-	glColor4f(1.0, 0.0, 1.0, 1.0);
+	glColor4f(0.0, 1.0, 1.0, 1.0);
 	glNormal3f(0.0f, 1.0f, 0.0f);
 	glVertex3f(x, y, z);
 	glVertex3f(x - square_size / 2, y, z + square_size / 2);
@@ -118,12 +118,17 @@ void drawFloor()
 	float y = 0;
 	glDisable(GL_LIGHTING);
 	glColor3f(1.0f, 1.0f, 1.0f);
-	for (int x = -90*3; x < 90*3; x += 3)
+	// Explain
+	// square_size = 2
+	// increment = 3 = 1.5 * square_size b/c of the way drawing each square
+	// -90 and 90 is choosen by incident
+	// <-90, 90> * 3 aim to get integer value (tragetting modulo 2)
+	for (int x = -90 * 3; x < 90 * 3; x += 3)
 	{
-		for (int z = -90*3; z < 90*3; z += 3)
+		for (int z = -90 * 3; z < 90 * 3; z += 3)
 		{
 			if ((x + z) % 2 == 0)
-				drawParallelo(x, -10, z, 2);
+				drawPattern(x, -10, z, 2);
 		}
 	}
 	glEnable(GL_LIGHTING);
