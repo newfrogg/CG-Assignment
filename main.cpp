@@ -3,7 +3,6 @@
 #include <vector>
 #include "supportClass.h"
 #include "Mesh.h"
-
 #include "Cylinder.h"
 #include "Base.h"
 #include "Bar.h"
@@ -24,6 +23,134 @@ enum cameraMode
 	__3D,
 	__2D
 };
+/// Global display settings
+int screenWidth = 1080;
+int screenHeight = 720;
+
+colorMode e_colorMode = Colored;
+cameraMode e_cameraMode = __3D;
+
+/// Size of Objects
+// MAIN CROSSBASE
+float fMainHeight = 1;
+float fGrooveHeight = 0.5;
+float fLength = 4.5;
+// assume: fMainWidth = 2 * fSubWidth + fGrooveWidth
+float fMainWidth = 1;
+float fSubWidth = 0.3;
+float fGrooveWidth = 0.4;
+// TIE BAR
+float tieBar_length = 4.6;
+float tieBar_long_width = 0.4;
+float tieBar_short_width = 0.6;
+float tieBar_height = 0.4;
+// LATCH CYLINDER X / Z / CENTER
+float latchCylinder_radius = fGrooveWidth / 2 - 0.1;
+float latchCylinder_height = fMainHeight - fGrooveHeight + 0.3;
+// SLIDER X / Z
+float slider_height = fMainHeight - fGrooveHeight;
+float slider_width = fGrooveWidth;
+float slider_length = 1; // FLength / 5
+
+float sliderMax_pos = 4;
+float m_angle = 45;
+float sliderX_pos = 4 * cos(DEG2RAD(m_angle));
+float sliderZ_pos = 4 * sin(DEG2RAD(m_angle));
+
+// Local camera papameters
+float m_angleX = 0;
+float m_angleZ = 0;
+
+/// Global camera settings
+float camera_angle;
+float camera_height;
+float camera_dis;
+float camera_X, camera_Y, camera_Z;
+float lookAt_X, lookAt_Y, lookAt_Z;
+
+/// Mesh of Objects
+Base crossbase = Base(fMainHeight, fGrooveHeight, fMainWidth, fSubWidth, fGrooveWidth, fLength);
+Cylinder latchCylinderX = Cylinder(20, latchCylinder_height, latchCylinder_radius);
+Cylinder latchCylinderZ = Cylinder(20, latchCylinder_height, latchCylinder_radius);
+Cylinder latchCylinderCenter = Cylinder(20, latchCylinder_height, latchCylinder_radius);
+Bar tiebar = Bar(tieBar_height, tieBar_short_width, tieBar_long_width, tieBar_length);
+Cube sliderX = Cube(0.5);
+Cube sliderZ = Cube(0.5);
+
+// Mesh of addition objects
+Cube temp1 = Cube(1);
+Cube temp2 = Cube(1);
+
+// Opengl coordinate convention
+// x-axis extends to the right
+// y-axis extends upwards
+// z-axis extends toward the viewer, coming out of the screen.
+void drawAxis()
+{
+	glBegin(GL_LINES);
+	{
+		glColor3f(1, 0, 0); // red
+		glVertex3f(0, 0, 0);
+		glVertex3f(4, 0, 0);
+	}
+	{
+		glColor3f(0, 1, 0); // green
+		glVertex3f(0, 0, 0);
+		glVertex3f(0, 4, 0);
+	}
+	{
+		glColor3f(0, 0, 1); // blue
+		glVertex3f(0, 0, 0);
+		glVertex3f(0, 0, 4);
+	}
+	glEnd();
+}
+
+void setMaterial(float ar, float ag, float ab,
+				 float dr, float dg, float db,
+				 float sr, float sg, float sb)
+{
+	GLfloat ambient[4];
+	GLfloat diffuse[4];
+	GLfloat specular[4];
+	GLfloat shiness = 100.8;
+
+	ambient[0] = ar;
+	ambient[1] = ag;
+	ambient[2] = ab;
+	ambient[3] = 1;
+	diffuse[0] = dr;
+	diffuse[1] = dg;
+	diffuse[2] = db;
+	diffuse[3] = 1;
+	specular[0] = sr;
+	specular[1] = sg;
+	specular[2] = sb;
+	specular[3] = 1;
+
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambient);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
+	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shiness);
+}
+void setLight()
+{
+	glEnable(GL_LIGHTING);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_NORMALIZE);
+
+	const GLfloat leftLightAmbColor[] = {0.1f, 0.1f, 0.1f, 1.0f};
+	const GLfloat leftLightSpecColor[] = {0.0f, 0.0f, 0.0f, 1.0f};
+	const GLfloat leftLightDiffColor[] = {1.0f, 1.0f, 0.0f, 1.0f};
+	const GLfloat leftLightPos[] = {-5.0, -5.0, -5.0, 0.0};
+
+	// set up left light
+	glLightfv(GL_LIGHT1, GL_POSITION, leftLightPos);
+	glLightfv(GL_LIGHT1, GL_AMBIENT, leftLightAmbColor);
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, leftLightDiffColor);
+	glLightfv(GL_LIGHT1, GL_SPECULAR, leftLightSpecColor);
+	glEnable(GL_LIGHT1);
+}
 
 void drawPattern(float x, float y, float z, float square_size)
 {
@@ -132,131 +259,6 @@ void drawFloor()
 		}
 	}
 	glEnable(GL_LIGHTING);
-}
-
-/// Global display settings
-int screenWidth = 1080;
-int screenHeight = 720;
-
-colorMode e_colorMode = Colored;
-cameraMode e_cameraMode = __3D;
-
-/// Size of Objects
-// MAIN CROSSBASE
-float fMainHeight = 1;
-float fGrooveHeight = 0.5;
-float fLength = 4.5;
-// assume: fMainWidth = 2 * fSubWidth + fGrooveWidth
-float fMainWidth = 1;
-float fSubWidth = 0.3;
-float fGrooveWidth = 0.4;
-// TIE BAR
-float tieBar_length = 4.6;
-float tieBar_long_width = 0.4;
-float tieBar_short_width = 0.6;
-float tieBar_height = 0.4;
-// LATCH CYLINDER X / Z / CENTER
-float latchCylinder_radius = fGrooveWidth / 2 - 0.1;
-float latchCylinder_height = fMainHeight - fGrooveHeight + 0.3;
-// SLIDER X / Z
-float slider_height = fMainHeight - fGrooveHeight;
-float slider_width = fGrooveWidth;
-float slider_length = 1; // FLength / 5
-
-float sliderMax_pos = 4;
-float m_angle = 45;
-float sliderX_pos = 4 * cos(DEG2RAD(m_angle));
-float sliderZ_pos = 4 * sin(DEG2RAD(m_angle));
-
-// Local camera papameters
-float m_angleX = 0;
-float m_angleZ = 0;
-
-/// Global camera settings
-float camera_angle;
-float camera_height;
-float camera_dis;
-float camera_X, camera_Y, camera_Z;
-float lookAt_X, lookAt_Y, lookAt_Z;
-
-/// Mesh of Objects
-Base crossbase = Base(fMainHeight, fGrooveHeight, fMainWidth, fSubWidth, fGrooveWidth, fLength);
-Cylinder latchCylinderX = Cylinder(20, latchCylinder_height, latchCylinder_radius);
-Cylinder latchCylinderZ = Cylinder(20, latchCylinder_height, latchCylinder_radius);
-Cylinder latchCylinderCenter = Cylinder(20, latchCylinder_height, latchCylinder_radius);
-Bar tiebar = Bar(tieBar_height, tieBar_short_width, tieBar_long_width, tieBar_length);
-Cube sliderX = Cube(0.5);
-Cube sliderZ = Cube(0.5);
-
-// Opengl coordinate convention
-// x-axis extends to the right
-// y-axis extends upwards
-// z-axis extends toward the viewer, coming out of the screen.
-void drawAxis()
-{
-	glBegin(GL_LINES);
-	{
-		glColor3f(1, 0, 0); // red
-		glVertex3f(0, 0, 0);
-		glVertex3f(4, 0, 0);
-	}
-	{
-		glColor3f(0, 1, 0); // green
-		glVertex3f(0, 0, 0);
-		glVertex3f(0, 4, 0);
-	}
-	{
-		glColor3f(0, 0, 1); // blue
-		glVertex3f(0, 0, 0);
-		glVertex3f(0, 0, 4);
-	}
-	glEnd();
-}
-
-void setMaterial(float ar, float ag, float ab,
-				 float dr, float dg, float db,
-				 float sr, float sg, float sb)
-{
-	GLfloat ambient[4];
-	GLfloat diffuse[4];
-	GLfloat specular[4];
-	GLfloat shiness = 100.8;
-
-	ambient[0] = ar;
-	ambient[1] = ag;
-	ambient[2] = ab;
-	ambient[3] = 1;
-	diffuse[0] = dr;
-	diffuse[1] = dg;
-	diffuse[2] = db;
-	diffuse[3] = 1;
-	specular[0] = sr;
-	specular[1] = sg;
-	specular[2] = sb;
-	specular[3] = 1;
-
-	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambient);
-	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse);
-	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
-	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shiness);
-}
-void setLight()
-{
-	glEnable(GL_LIGHTING);
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_NORMALIZE);
-
-	const GLfloat leftLightAmbColor[] = {0.1f, 0.1f, 0.1f, 1.0f};
-	const GLfloat leftLightSpecColor[] = {0.0f, 0.0f, 0.0f, 1.0f};
-	const GLfloat leftLightDiffColor[] = {1.0f, 1.0f, 0.0f, 1.0f};
-	const GLfloat leftLightPos[] = {-5.0, -5.0, -5.0, 0.0};
-
-	// set up left light
-	glLightfv(GL_LIGHT1, GL_POSITION, leftLightPos);
-	glLightfv(GL_LIGHT1, GL_AMBIENT, leftLightAmbColor);
-	glLightfv(GL_LIGHT1, GL_DIFFUSE, leftLightDiffColor);
-	glLightfv(GL_LIGHT1, GL_SPECULAR, leftLightSpecColor);
-	glEnable(GL_LIGHT1);
 }
 
 void drawMainbar()
@@ -377,6 +379,7 @@ void draw_2_slider()
 	}
 	glPopMatrix();
 }
+
 void drawMainMechainism()
 {
 	/// local x-axis map to axis-X in real world
@@ -398,6 +401,43 @@ void drawMainMechainism()
 
 	glPopMatrix();
 }
+void drawTshape()
+{
+	glPushMatrix();
+	glTranslatef(-10.0 , 10, -10);
+	glRotatef(90, 1, 0, 0);
+	glPushMatrix();
+	glScalef(0.8, 0.3, 4);
+	if (e_colorMode == Colored)
+	{
+		setMaterial(1, 0, 0,
+					0.0, 0.0, 0.0,
+					1.0, 1.0, 1.0);
+		temp1.Draw();
+	}
+	else
+	{
+		temp1.DrawWireframe();
+	}
+	glPopMatrix();
+	glPushMatrix();
+	glScalef(4, 0.3, 0.8);
+	glTranslatef(0, 0, -6);
+	if (e_colorMode == Colored)
+	{
+		setMaterial(1, 0, 0,
+					0.0, 0.0, 0.0,
+					1.0, 1.0, 1.0);
+		temp2.Draw();
+	}
+	else
+	{
+		temp2.DrawWireframe();
+	}
+	glPopMatrix();
+	glPopMatrix();
+}
+
 void myDisplay()
 {
 	////////////////////////////////////////////////////////////////////////
@@ -434,13 +474,17 @@ void myDisplay()
 	// gl view port which set port of view in the current screen
 	/// ALLOW ROTATE AROUND ITS STRUCTURE AXIS
 
+	// Floor DISPLAY
 	drawFloor();
-	// drawMainMechainism();
+	// Main model DISPLAY
+	drawMainMechainism();
+	// Additional model DISPLAY
+	drawTshape();
 	// 	CURRENTLY NOT USE (B/C I BELIEVE VIEWPORT NOT WORK WITH gluPerspective)
 	// 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// 
-	// 
+	//
+	//
 	// glViewport(0, 0, screenWidth, screenHeight);
 	// {
 	// 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -613,17 +657,17 @@ void myInit()
 
 void showInstructions()
 {
-	cout << "1, 2      : Xoay hinh chu thap xung quanh truc Y cuc bo\n";
-	cout << "3, 4      : Xoay hinh chu thap xung quanh truc X cuc bo\n";
-	cout << "5, 6      : Dich chuyen thanh truot\n";
-	cout << "W, w      : Chuyen doi qua lai giua che do khung day va to mau\n";
-	cout << "V, v  	   : Chuyen doi qua lai giua hai che do nhin\n";
-	cout << "+         : Tang khoang cach camera\n";
-	cout << "-     	   : Giam khoang cach camera\n";
-	cout << "up arrow  : Tang chieu cao camera\n";
-	cout << "down arrow: Giam chieu cao camera\n";
-	cout << "<-        : Quay camera theo chieu kim dong ho\n";
-	cout << "->        : Quay camera nguoc chieu kim dong ho\n";
+	cout << "1, 2       : Xoay hinh chu thap xung quanh truc Y cuc bo\n";
+	cout << "3, 4       : Xoay hinh chu thap xung quanh truc X cuc bo\n";
+	cout << "5, 6       : Dich chuyen thanh truot\n";
+	cout << "W, w       : Chuyen doi qua lai giua che do khung day va to mau\n";
+	cout << "V, v  	    : Chuyen doi qua lai giua hai che do nhin\n";
+	cout << "+          : Tang khoang cach camera\n";
+	cout << "-     	    : Giam khoang cach camera\n";
+	cout << "up arrow   : Tang chieu cao camera\n";
+	cout << "down arrow : Giam chieu cao camera\n";
+	cout << "<-         : Quay camera theo chieu kim dong ho\n";
+	cout << "->         : Quay camera nguoc chieu kim dong ho\n";
 }
 
 int main(int argc, char *argv[])
@@ -654,6 +698,12 @@ int main(int argc, char *argv[])
 	sliderX.CalculateFacesNorm();
 	sliderZ.create();
 	sliderZ.CalculateFacesNorm();
+
+	temp1.create();
+	temp1.CalculateFacesNorm();
+
+	temp2.create();
+	temp2.CalculateFacesNorm();
 	// Init opengl environment
 	myInit();
 	// Function to display main presentation
