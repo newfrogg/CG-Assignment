@@ -377,7 +377,27 @@ void draw_2_slider()
 	}
 	glPopMatrix();
 }
+void drawMainMechainism()
+{
+	/// local x-axis map to axis-X in real world
+	/// local y-axis map to axis-Z in real world
+	/// The height is always the axis-Y
+	/// CHANGE MODE BETWEEN DRAW COLORED OR WIREFRAME IS ALSO ALLOWED.
+	//// Local ROTATE ALLOWED
+	glPushMatrix();
+	glRotatef(m_angleX, 1, 0, 0);
+	glRotatef(m_angleZ, 0, 0, 1);
+	// Display Main CrossBar
+	drawMainbar();
+	// Display the Tie bar (connecting object)
+	drawTiebar();
+	// Display 3 latch cylinder
+	draw_3_latch();
+	// Display 2 slider
+	draw_2_slider();
 
+	glPopMatrix();
+}
 void myDisplay()
 {
 	////////////////////////////////////////////////////////////////////////
@@ -413,35 +433,20 @@ void myDisplay()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	// gl view port which set port of view in the current screen
 	/// ALLOW ROTATE AROUND ITS STRUCTURE AXIS
-	/// local x-axis map to axis-X in real world
-	/// local y-axis map to axis-Z in real world
-	/// The height is always the axis-Y
-	/// CHANGE MODE BETWEEN DRAW COLORED OR WIREFRAME IS ALSO ALLOWED.
 
-	glPushMatrix();
 	drawFloor();
-	glPopMatrix();
-
-	glViewport(0, 0, screenWidth, screenHeight);
-	{
-		//// Local ROTATE ALLOWED
-		glPushMatrix();
-		glRotatef(m_angleX, 1, 0, 0);
-		glRotatef(m_angleZ, 0, 0, 1);
-		// Display Main CrossBar
-		drawMainbar();
-		// Display the Tie bar (connecting object)
-		drawTiebar();
-		// Display 3 latch cylinder
-		draw_3_latch();
-		// Display 2 slider
-		draw_2_slider();
-
-		glPopMatrix();
-		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		///////////////////////////////////////////////// END OF VIEW PORT /////////////////////////////////////////////////
-		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	}
+	// drawMainMechainism();
+	// 	CURRENTLY NOT USE (B/C I BELIEVE VIEWPORT NOT WORK WITH gluPerspective)
+	// 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// 
+	// 
+	// glViewport(0, 0, screenWidth, screenHeight);
+	// {
+	// 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// 	///////////////////////////////////////////////// END OF VIEW PORT /////////////////////////////////////////////////
+	// 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// }
 	glutPostRedisplay();
 	// Perform rendering operations
 	glFlush();
