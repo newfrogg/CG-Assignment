@@ -108,7 +108,6 @@ void drawParallelo(float x, float y, float z, float square_size)
 	glVertex3f(x - square_size / 2, y, z + square_size);
 	glVertex3f(x - square_size, y, z + square_size / 2);
 	glVertex3f(x - square_size / 2, y, z + square_size / 2);
-
 	glEnd();
 
 	glPopMatrix();
@@ -119,12 +118,12 @@ void drawFloor()
 	float y = 0;
 	glDisable(GL_LIGHTING);
 	glColor3f(1.0f, 1.0f, 1.0f);
-	for (float x = -90; x < 90; x += 3)
+	for (int x = -90*3; x < 90*3; x += 3)
 	{
-		for (float z = -90; z < 90; z += 3)
+		for (int z = -90*3; z < 90*3; z += 3)
 		{
-
-			drawParallelo(x, -10, z, 1);
+			if ((x + z) % 2 == 0)
+				drawParallelo(x, -10, z, 2);
 		}
 	}
 	glEnable(GL_LIGHTING);
