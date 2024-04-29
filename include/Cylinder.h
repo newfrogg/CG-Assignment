@@ -8,5 +8,6 @@ class Cylinder : public Mesh {
         Cylinder(int nSegment, float fHeight, float fRadius) : nSegment(nSegment), fHeight(fHeight), fRadius(fRadius) {};
         
         void create();
+        void create_alpha(float alpha);
         void Draw();
 };

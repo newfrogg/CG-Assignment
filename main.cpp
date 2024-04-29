@@ -80,6 +80,9 @@ Cube sliderZ = Cube(0.5);
 // Mesh of addition objects
 Cube temp1 = Cube(1);
 Cube temp2 = Cube(1);
+Cylinder temp3 = Cylinder(30, 0.6, 0.8);
+Cylinder temp4 = Cylinder(30, 0.6, 0.8);
+Cylinder temp5 = Cylinder(30, 0.6, 0.8);
 
 // Opengl coordinate convention
 // x-axis extends to the right
@@ -404,8 +407,10 @@ void drawMainMechainism()
 void drawTshape()
 {
 	glPushMatrix();
-	glTranslatef(-10.0 , 10, -10);
+	glTranslatef(-20.0 , 10, -20);
 	glRotatef(90, 1, 0, 0);
+
+	// X-bar
 	glPushMatrix();
 	glScalef(0.8, 0.3, 4);
 	if (e_colorMode == Colored)
@@ -420,6 +425,7 @@ void drawTshape()
 		temp1.DrawWireframe();
 	}
 	glPopMatrix();
+	// y-bar
 	glPushMatrix();
 	glScalef(4, 0.3, 0.8);
 	glTranslatef(0, 0, -6);
@@ -433,6 +439,52 @@ void drawTshape()
 	else
 	{
 		temp2.DrawWireframe();
+	}
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(0, 0, 4);
+	if (e_colorMode == Colored)
+	{
+		setMaterial(1, 0, 0,
+					0.0, 0.0, 0.0,
+					1.0, 1.0, 1.0);
+		temp3.Draw();
+	}
+	else
+	{
+		temp3.DrawWireframe();
+	}
+	glPopMatrix();
+	// Right half cylinder
+	glPushMatrix();
+	glRotatef(90, 0, 1, 0);
+	glTranslatef(4 + 0.8, 0, 4);
+	if (e_colorMode == Colored)
+	{
+		setMaterial(1, 0, 0,
+					0.0, 0.0, 0.0,
+					1.0, 1.0, 1.0);
+		temp4.Draw();
+	}
+	else
+	{
+		temp4.DrawWireframe();
+	}
+	glPopMatrix();
+	// Left half cylinder
+	glPushMatrix();
+	glRotatef(-90, 0, 1, 0);
+	glTranslatef(-4 - 0.8, 0, 4);
+	if (e_colorMode == Colored)
+	{
+		setMaterial(1, 0, 0,
+					0.0, 0.0, 0.0,
+					1.0, 1.0, 1.0);
+		temp5.Draw();
+	}
+	else
+	{
+		temp5.DrawWireframe();
 	}
 	glPopMatrix();
 	glPopMatrix();
@@ -704,6 +756,15 @@ int main(int argc, char *argv[])
 
 	temp2.create();
 	temp2.CalculateFacesNorm();
+
+	temp3.create_alpha(180);
+	temp3.CalculateFacesNorm();
+
+	temp4.create_alpha(180);
+	temp4.CalculateFacesNorm();
+
+	temp5.create_alpha(180);
+	temp5.CalculateFacesNorm();
 	// Init opengl environment
 	myInit();
 	// Function to display main presentation
