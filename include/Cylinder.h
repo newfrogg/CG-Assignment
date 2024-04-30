@@ -9,5 +9,6 @@ class Cylinder : public Mesh {
         
         void create();
         void create_alpha(float alpha);
+        void create_compensation(float alpha);
         void Draw();
 };

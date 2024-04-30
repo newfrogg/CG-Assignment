@@ -78,11 +78,14 @@ Cube sliderX = Cube(0.5);
 Cube sliderZ = Cube(0.5);
 
 // Mesh of addition objects
+// Support Mesh for buidling Tshape
 Cube temp1 = Cube(1);
 Cube temp2 = Cube(1);
 Cylinder temp3 = Cylinder(30, 0.6, 0.8);
 Cylinder temp4 = Cylinder(30, 0.6, 0.8);
 Cylinder temp5 = Cylinder(30, 0.6, 0.8);
+Cylinder temp6 = Cylinder(30, 0.6, 0.8);
+Cylinder temp7 = Cylinder(30, 0.6, 0.8);
 
 // Opengl coordinate convention
 // x-axis extends to the right
@@ -431,9 +434,6 @@ void drawTshape()
 	glTranslatef(0, 0, -6);
 	if (e_colorMode == Colored)
 	{
-		setMaterial(1, 0, 0,
-					0.0, 0.0, 0.0,
-					1.0, 1.0, 1.0);
 		temp2.Draw();
 	}
 	else
@@ -445,9 +445,6 @@ void drawTshape()
 	glTranslatef(0, 0, 4);
 	if (e_colorMode == Colored)
 	{
-		setMaterial(1, 0, 0,
-					0.0, 0.0, 0.0,
-					1.0, 1.0, 1.0);
 		temp3.Draw();
 	}
 	else
@@ -461,9 +458,6 @@ void drawTshape()
 	glTranslatef(4 + 0.8, 0, 4);
 	if (e_colorMode == Colored)
 	{
-		setMaterial(1, 0, 0,
-					0.0, 0.0, 0.0,
-					1.0, 1.0, 1.0);
 		temp4.Draw();
 	}
 	else
@@ -477,14 +471,36 @@ void drawTshape()
 	glTranslatef(-4 - 0.8, 0, 4);
 	if (e_colorMode == Colored)
 	{
-		setMaterial(1, 0, 0,
-					0.0, 0.0, 0.0,
-					1.0, 1.0, 1.0);
+
 		temp5.Draw();
 	}
 	else
 	{
 		temp5.DrawWireframe();
+	}
+	glPopMatrix();
+	glPushMatrix();
+	glRotatef(90, 0, 1, 0);
+	glTranslatef(2 + 0.6 * 2, 0, -0.8 * 2);
+	if (e_colorMode == Colored)
+	{
+		temp6.Draw();
+	}
+	else
+	{
+		temp6.DrawWireframe();
+	}
+	glPopMatrix();
+	glPushMatrix();
+	glRotatef(-180, 0, 1, 0);
+	glTranslatef(-0.8 * 2, 0, 2 + 0.6 * 2);
+	if (e_colorMode == Colored)
+	{
+		temp7.Draw();
+	}
+	else
+	{
+		temp7.DrawWireframe();
 	}
 	glPopMatrix();
 	glPopMatrix();
@@ -722,20 +738,8 @@ void showInstructions()
 	cout << "->         : Quay camera nguoc chieu kim dong ho\n";
 }
 
-int main(int argc, char *argv[])
+void createMainMechainism()
 {
-	// Display instruction to control the application
-	// showInstructions();
-	// Opengl Main display program
-	glutInit(&argc, (char **)argv);							  // initialize the tool kit
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH); // set the display mode
-	glutInitWindowSize(screenWidth, screenHeight);			  // set window size
-	glutInitWindowPosition(100, 100);						  // set window position on screen
-	glutCreateWindow("Lab 3");								  // open the screen window
-
-	////////////////////////////////////////////////////////////////////////
-	//////  CREATE OBJECTS
-	////////////////////////////////////////////////////////////////////////
 	crossbase.create();
 	crossbase.CalculateFacesNorm();
 	tiebar.create();
@@ -750,7 +754,9 @@ int main(int argc, char *argv[])
 	sliderX.CalculateFacesNorm();
 	sliderZ.create();
 	sliderZ.CalculateFacesNorm();
-
+}
+void createTshape()
+{
 	temp1.create();
 	temp1.CalculateFacesNorm();
 
@@ -765,6 +771,31 @@ int main(int argc, char *argv[])
 
 	temp5.create_alpha(180);
 	temp5.CalculateFacesNorm();
+
+	temp6.create_compensation(90);
+	temp6.CalculateFacesNorm();
+
+	temp7.create_compensation(90);
+	temp7.CalculateFacesNorm();
+}
+
+int main(int argc, char *argv[])
+{
+	// Display instruction to control the application
+	// showInstructions();
+	// Opengl Main display program
+	glutInit(&argc, (char **)argv);							  // initialize the tool kit
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH); // set the display mode
+	glutInitWindowSize(screenWidth, screenHeight);			  // set window size
+	glutInitWindowPosition(100, 100);						  // set window position on screen
+	glutCreateWindow("Lab 3");								  // open the screen window
+
+	////////////////////////////////////////////////////////////////////////
+	//////  CREATE OBJECTS
+	////////////////////////////////////////////////////////////////////////
+	createMainMechainism();
+	createTshape();
+
 	// Init opengl environment
 	myInit();
 	// Function to display main presentation
