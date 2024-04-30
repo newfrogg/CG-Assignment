@@ -7,6 +7,7 @@
 #include "Base.h"
 #include "Bar.h"
 #include "Cube.h"
+#include "PieceBar.h"
 
 #define DEG2RAD(x) (x * M_PI) / 180.0f
 
@@ -86,6 +87,28 @@ Cylinder temp4 = Cylinder(30, 0.6, 0.8);
 Cylinder temp5 = Cylinder(30, 0.6, 0.8);
 Cylinder temp6 = Cylinder(30, 0.6, 0.8);
 Cylinder temp7 = Cylinder(30, 0.6, 0.8);
+// Support Mesh for building 5-bar
+PieceBar sup_5bar_1 = PieceBar(1, 1, 0.3, 4.5);
+PieceBar sup_5bar_2 = PieceBar(1, 1, 0.3, 4.5);
+PieceBar sup_5bar_3 = PieceBar(1, 1, 0.3, 4.5);
+PieceBar sup_5bar_4 = PieceBar(1, 1, 0.3, 4.5);
+PieceBar sup_5bar_5 = PieceBar(1, 1, 0.3, 4.5);
+// Support Mesh for building 5-bar
+PieceBar sup_6bar_1 = PieceBar(1, 1, 0.3, 4.5);
+PieceBar sup_6bar_2 = PieceBar(1, 1, 0.3, 4.5);
+PieceBar sup_6bar_3 = PieceBar(1, 1, 0.3, 4.5);
+PieceBar sup_6bar_4 = PieceBar(1, 1, 0.3, 4.5);
+PieceBar sup_6bar_5 = PieceBar(1, 1, 0.3, 4.5);
+PieceBar sup_6bar_6 = PieceBar(1, 1, 0.3, 4.5);
+// Support Mesh for building 8-bar
+PieceBar sup_8bar_1 = PieceBar(1, 1, 0.3, 4.5);
+PieceBar sup_8bar_2 = PieceBar(1, 1, 0.3, 4.5);
+PieceBar sup_8bar_3 = PieceBar(1, 1, 0.3, 4.5);
+PieceBar sup_8bar_4 = PieceBar(1, 1, 0.3, 4.5);
+PieceBar sup_8bar_5 = PieceBar(1, 1, 0.3, 4.5);
+PieceBar sup_8bar_6 = PieceBar(1, 1, 0.3, 4.5);
+PieceBar sup_8bar_7 = PieceBar(1, 1, 0.3, 4.5);
+PieceBar sup_8bar_8 = PieceBar(1, 1, 0.3, 4.5);
 
 // Opengl coordinate convention
 // x-axis extends to the right
@@ -410,7 +433,7 @@ void drawMainMechainism()
 void drawTshape()
 {
 	glPushMatrix();
-	glTranslatef(-20.0 , 10, -20);
+	glTranslatef(-20.0, 10, -20);
 	glRotatef(90, 1, 0, 0);
 
 	// X-bar
@@ -506,6 +529,305 @@ void drawTshape()
 	glPopMatrix();
 }
 
+void draw_5bar()
+{
+	glPushMatrix();
+
+	glTranslatef(20.0, 10, 20);
+	glRotatef(-90, 1, 0, 0);
+	{
+		glPushMatrix();
+		if (e_colorMode == Colored)
+		{
+			setMaterial(1, 0, 0,
+						0.0, 0.0, 0.0,
+						1.0, 1.0, 1.0);
+			sup_5bar_1.Draw();
+		}
+		else
+		{
+			sup_5bar_1.DrawWireframe();
+		}
+		glPopMatrix();
+	}
+
+	{
+		glPushMatrix();
+		glRotatef(72, 0, 1, 0);
+
+		if (e_colorMode == Colored)
+		{
+			sup_5bar_2.Draw();
+		}
+		else
+		{
+			sup_5bar_2.DrawWireframe();
+		}
+		glPopMatrix();
+	}
+	{
+		glPushMatrix();
+		glRotatef(72 * 2, 0, 1, 0);
+
+		if (e_colorMode == Colored)
+		{
+			sup_5bar_3.Draw();
+		}
+		else
+		{
+			sup_5bar_3.DrawWireframe();
+		}
+		glPopMatrix();
+	}
+	{
+		glPushMatrix();
+		glRotatef(72 * 3, 0, 1, 0);
+
+		if (e_colorMode == Colored)
+		{
+			sup_5bar_4.Draw();
+		}
+		else
+		{
+			sup_5bar_4.DrawWireframe();
+		}
+		glPopMatrix();
+	}
+	{
+		glPushMatrix();
+		glRotatef(72 * 4, 0, 1, 0);
+
+		if (e_colorMode == Colored)
+		{
+			sup_5bar_5.Draw();
+		}
+		else
+		{
+			sup_5bar_5.DrawWireframe();
+		}
+		glPopMatrix();
+	}
+
+	glPopMatrix();
+}
+
+void draw_6bar()
+{
+	glPushMatrix();
+
+	glTranslatef(-20.0, 10, 20);
+	glRotatef(-90, 1, 0, 0);
+	{
+		glPushMatrix();
+		if (e_colorMode == Colored)
+		{
+			setMaterial(1, 0, 0,
+						0.0, 0.0, 0.0,
+						1.0, 1.0, 1.0);
+			sup_6bar_1.Draw();
+		}
+		else
+		{
+			sup_6bar_1.DrawWireframe();
+		}
+		glPopMatrix();
+	}
+
+	{
+		glPushMatrix();
+		glRotatef(60, 0, 1, 0);
+
+		if (e_colorMode == Colored)
+		{
+			sup_6bar_2.Draw();
+		}
+		else
+		{
+			sup_6bar_2.DrawWireframe();
+		}
+		glPopMatrix();
+	}
+	{
+		glPushMatrix();
+		glRotatef(60 * 2, 0, 1, 0);
+
+		if (e_colorMode == Colored)
+		{
+			sup_6bar_3.Draw();
+		}
+		else
+		{
+			sup_6bar_3.DrawWireframe();
+		}
+		glPopMatrix();
+	}
+	{
+		glPushMatrix();
+		glRotatef(60 * 3, 0, 1, 0);
+
+		if (e_colorMode == Colored)
+		{
+			sup_6bar_4.Draw();
+		}
+		else
+		{
+			sup_6bar_4.DrawWireframe();
+		}
+		glPopMatrix();
+	}
+	{
+		glPushMatrix();
+		glRotatef(60 * 4, 0, 1, 0);
+
+		if (e_colorMode == Colored)
+		{
+			sup_6bar_5.Draw();
+		}
+		else
+		{
+			sup_6bar_5.DrawWireframe();
+		}
+		glPopMatrix();
+	}
+	{
+		glPushMatrix();
+		glRotatef(60 * 5, 0, 1, 0);
+
+		if (e_colorMode == Colored)
+		{
+			sup_6bar_6.Draw();
+		}
+		else
+		{
+			sup_6bar_6.DrawWireframe();
+		}
+		glPopMatrix();
+	}
+	glPopMatrix();
+}
+
+void draw_8bar()
+{
+	glPushMatrix();
+
+	glTranslatef(20.0, 10, -20);
+	glRotatef(-90, 1, 0, 0);
+	{
+		glPushMatrix();
+		if (e_colorMode == Colored)
+		{
+			setMaterial(1, 0, 0,
+						0.0, 0.0, 0.0,
+						1.0, 1.0, 1.0);
+			sup_8bar_1.Draw();
+		}
+		else
+		{
+			sup_8bar_1.DrawWireframe();
+		}
+		glPopMatrix();
+	}
+
+	{
+		glPushMatrix();
+		glRotatef(45, 0, 1, 0);
+
+		if (e_colorMode == Colored)
+		{
+			sup_8bar_2.Draw();
+		}
+		else
+		{
+			sup_8bar_2.DrawWireframe();
+		}
+		glPopMatrix();
+	}
+	{
+		glPushMatrix();
+		glRotatef(45 * 2, 0, 1, 0);
+
+		if (e_colorMode == Colored)
+		{
+			sup_8bar_3.Draw();
+		}
+		else
+		{
+			sup_8bar_3.DrawWireframe();
+		}
+		glPopMatrix();
+	}
+	{
+		glPushMatrix();
+		glRotatef(45 * 3, 0, 1, 0);
+
+		if (e_colorMode == Colored)
+		{
+			sup_8bar_4.Draw();
+		}
+		else
+		{
+			sup_8bar_4.DrawWireframe();
+		}
+		glPopMatrix();
+	}
+	{
+		glPushMatrix();
+		glRotatef(45 * 4, 0, 1, 0);
+
+		if (e_colorMode == Colored)
+		{
+			sup_8bar_5.Draw();
+		}
+		else
+		{
+			sup_8bar_5.DrawWireframe();
+		}
+		glPopMatrix();
+	}
+	{
+		glPushMatrix();
+		glRotatef(45 * 5, 0, 1, 0);
+
+		if (e_colorMode == Colored)
+		{
+			sup_8bar_6.Draw();
+		}
+		else
+		{
+			sup_8bar_6.DrawWireframe();
+		}
+		glPopMatrix();
+	}
+		{
+		glPushMatrix();
+		glRotatef(45 * 6, 0, 1, 0);
+
+		if (e_colorMode == Colored)
+		{
+			sup_8bar_7.Draw();
+		}
+		else
+		{
+			sup_8bar_7.DrawWireframe();
+		}
+		glPopMatrix();
+	}
+	{
+		glPushMatrix();
+		glRotatef(45 * 7, 0, 1, 0);
+
+		if (e_colorMode == Colored)
+		{
+			sup_8bar_8.Draw();
+		}
+		else
+		{
+			sup_8bar_8.DrawWireframe();
+		}
+		glPopMatrix();
+	}
+	glPopMatrix();
+}
 void myDisplay()
 {
 	////////////////////////////////////////////////////////////////////////
@@ -546,8 +868,16 @@ void myDisplay()
 	drawFloor();
 	// Main model DISPLAY
 	drawMainMechainism();
-	// Additional model DISPLAY
+	// ADDITION model DISPLAY
+	// Tshape
 	drawTshape();
+	// 5bar;
+	draw_5bar();
+	// 6bar
+	draw_6bar();
+	// 8bar
+	draw_8bar();
+
 	// 	CURRENTLY NOT USE (B/C I BELIEVE VIEWPORT NOT WORK WITH gluPerspective)
 	// 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -778,6 +1108,53 @@ void createTshape()
 	temp7.create_compensation(90);
 	temp7.CalculateFacesNorm();
 }
+void create_5bar()
+{
+	sup_5bar_1.create();
+	sup_5bar_1.CalculateFacesNorm();
+	sup_5bar_2.create();
+	sup_5bar_2.CalculateFacesNorm();
+	sup_5bar_3.create();
+	sup_5bar_3.CalculateFacesNorm();
+	sup_5bar_4.create();
+	sup_5bar_4.CalculateFacesNorm();
+	sup_5bar_5.create();
+	sup_5bar_5.CalculateFacesNorm();
+}
+void create_6bar()
+{
+	sup_6bar_1.create();
+	sup_6bar_1.CalculateFacesNorm();
+	sup_6bar_2.create();
+	sup_6bar_2.CalculateFacesNorm();
+	sup_6bar_3.create();
+	sup_6bar_3.CalculateFacesNorm();
+	sup_6bar_4.create();
+	sup_6bar_4.CalculateFacesNorm();
+	sup_6bar_5.create();
+	sup_6bar_5.CalculateFacesNorm();
+	sup_6bar_6.create();
+	sup_6bar_6.CalculateFacesNorm();
+}
+void create_8bar()
+{
+	sup_8bar_1.create();
+	sup_8bar_1.CalculateFacesNorm();
+	sup_8bar_2.create();
+	sup_8bar_2.CalculateFacesNorm();
+	sup_8bar_3.create();
+	sup_8bar_3.CalculateFacesNorm();
+	sup_8bar_4.create();
+	sup_8bar_4.CalculateFacesNorm();
+	sup_8bar_5.create();
+	sup_8bar_5.CalculateFacesNorm();
+	sup_8bar_6.create();
+	sup_8bar_6.CalculateFacesNorm();
+	sup_8bar_7.create();
+	sup_8bar_7.CalculateFacesNorm();
+	sup_8bar_8.create();
+	sup_8bar_8.CalculateFacesNorm();
+}
 
 int main(int argc, char *argv[])
 {
@@ -788,13 +1165,16 @@ int main(int argc, char *argv[])
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH); // set the display mode
 	glutInitWindowSize(screenWidth, screenHeight);			  // set window size
 	glutInitWindowPosition(100, 100);						  // set window position on screen
-	glutCreateWindow("Lab 3");								  // open the screen window
+	glutCreateWindow("Nguyen Le Gia Hinh - 2011213");		  // open the screen window
 
 	////////////////////////////////////////////////////////////////////////
 	//////  CREATE OBJECTS
 	////////////////////////////////////////////////////////////////////////
 	createMainMechainism();
 	createTshape();
+	create_5bar();
+	create_6bar();
+	create_8bar();
 
 	// Init opengl environment
 	myInit();
