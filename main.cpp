@@ -430,6 +430,7 @@ void drawMainMechainism()
 
 	glPopMatrix();
 }
+
 void drawTshape()
 {
 	glPushMatrix();
@@ -529,14 +530,49 @@ void drawTshape()
 	glPopMatrix();
 }
 
+void addAdistance(float fMainWidth, float angle)
+{
+	glTranslatef(0, 0, fMainWidth / (2 * tan(DEG2RAD(angle / 2))));
+}
+
+void drawIsoscelesPolygon(int numVertices, float size, float fMainHeight)
+{
+	glBegin(GL_POLYGON);
+	glColor4f(1.0, 1, 1, 1.0);
+	for (int i = 0; i < numVertices; ++i)
+	{
+		float angle = 2.0f * M_PI * i / numVertices; // Calculate angle for each vertex
+		float x = size * cos(angle);				 // Calculate x coordinate
+		float z = size * sin(angle);				 // Calculate z coordinate
+		glVertex3f(x, 0, z);
+	}
+	glEnd();
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < numVertices; ++i)
+	{
+		float angle = 2.0f * M_PI * i / numVertices; // Calculate angle for each vertex
+		float x = size * cos(angle);				 // Calculate x coordinate
+		float z = size * sin(angle);				 // Calculate z coordinate
+		glVertex3f(x, fMainHeight, z);
+	}
+	glEnd();
+}
+
+float calculateRadius(float fMainWidth, float angle)
+{
+	return fMainWidth / (2 * cos(DEG2RAD(angle / 2)));
+}
+
 void draw_5bar()
 {
 	glPushMatrix();
-
+	drawIsoscelesPolygon(5, calculateRadius(1, 72), 1);
 	glTranslatef(20.0, 10, 20);
 	glRotatef(-90, 1, 0, 0);
 	{
 		glPushMatrix();
+		addAdistance(1, 72);
+
 		if (e_colorMode == Colored)
 		{
 			setMaterial(1, 0, 0,
@@ -553,7 +589,9 @@ void draw_5bar()
 
 	{
 		glPushMatrix();
+
 		glRotatef(72, 0, 1, 0);
+		addAdistance(1, 72);
 
 		if (e_colorMode == Colored)
 		{
@@ -567,7 +605,9 @@ void draw_5bar()
 	}
 	{
 		glPushMatrix();
+
 		glRotatef(72 * 2, 0, 1, 0);
+		addAdistance(1, 72);
 
 		if (e_colorMode == Colored)
 		{
@@ -581,7 +621,9 @@ void draw_5bar()
 	}
 	{
 		glPushMatrix();
+
 		glRotatef(72 * 3, 0, 1, 0);
+		addAdistance(1, 72);
 
 		if (e_colorMode == Colored)
 		{
@@ -595,7 +637,9 @@ void draw_5bar()
 	}
 	{
 		glPushMatrix();
+
 		glRotatef(72 * 4, 0, 1, 0);
+		addAdistance(1, 72);
 
 		if (e_colorMode == Colored)
 		{
@@ -619,6 +663,8 @@ void draw_6bar()
 	glRotatef(-90, 1, 0, 0);
 	{
 		glPushMatrix();
+		addAdistance(1, 60);
+
 		if (e_colorMode == Colored)
 		{
 			setMaterial(1, 0, 0,
@@ -636,6 +682,7 @@ void draw_6bar()
 	{
 		glPushMatrix();
 		glRotatef(60, 0, 1, 0);
+		addAdistance(1, 60);
 
 		if (e_colorMode == Colored)
 		{
@@ -650,6 +697,7 @@ void draw_6bar()
 	{
 		glPushMatrix();
 		glRotatef(60 * 2, 0, 1, 0);
+		addAdistance(1, 60);
 
 		if (e_colorMode == Colored)
 		{
@@ -664,6 +712,7 @@ void draw_6bar()
 	{
 		glPushMatrix();
 		glRotatef(60 * 3, 0, 1, 0);
+		addAdistance(1, 60);
 
 		if (e_colorMode == Colored)
 		{
@@ -678,6 +727,7 @@ void draw_6bar()
 	{
 		glPushMatrix();
 		glRotatef(60 * 4, 0, 1, 0);
+		addAdistance(1, 60);
 
 		if (e_colorMode == Colored)
 		{
@@ -692,6 +742,7 @@ void draw_6bar()
 	{
 		glPushMatrix();
 		glRotatef(60 * 5, 0, 1, 0);
+		addAdistance(1, 60);
 
 		if (e_colorMode == Colored)
 		{
@@ -714,6 +765,7 @@ void draw_8bar()
 	glRotatef(-90, 1, 0, 0);
 	{
 		glPushMatrix();
+		addAdistance(1, 45);
 		if (e_colorMode == Colored)
 		{
 			setMaterial(1, 0, 0,
@@ -731,6 +783,7 @@ void draw_8bar()
 	{
 		glPushMatrix();
 		glRotatef(45, 0, 1, 0);
+		addAdistance(1, 45);
 
 		if (e_colorMode == Colored)
 		{
@@ -745,6 +798,7 @@ void draw_8bar()
 	{
 		glPushMatrix();
 		glRotatef(45 * 2, 0, 1, 0);
+		addAdistance(1, 45);
 
 		if (e_colorMode == Colored)
 		{
@@ -759,6 +813,7 @@ void draw_8bar()
 	{
 		glPushMatrix();
 		glRotatef(45 * 3, 0, 1, 0);
+		addAdistance(1, 45);
 
 		if (e_colorMode == Colored)
 		{
@@ -773,6 +828,7 @@ void draw_8bar()
 	{
 		glPushMatrix();
 		glRotatef(45 * 4, 0, 1, 0);
+		addAdistance(1, 45);
 
 		if (e_colorMode == Colored)
 		{
@@ -787,6 +843,7 @@ void draw_8bar()
 	{
 		glPushMatrix();
 		glRotatef(45 * 5, 0, 1, 0);
+		addAdistance(1, 45);
 
 		if (e_colorMode == Colored)
 		{
@@ -798,9 +855,10 @@ void draw_8bar()
 		}
 		glPopMatrix();
 	}
-		{
+	{
 		glPushMatrix();
 		glRotatef(45 * 6, 0, 1, 0);
+		addAdistance(1, 45);
 
 		if (e_colorMode == Colored)
 		{
@@ -815,6 +873,7 @@ void draw_8bar()
 	{
 		glPushMatrix();
 		glRotatef(45 * 7, 0, 1, 0);
+		addAdistance(1, 45);
 
 		if (e_colorMode == Colored)
 		{
@@ -828,6 +887,7 @@ void draw_8bar()
 	}
 	glPopMatrix();
 }
+
 void myDisplay()
 {
 	////////////////////////////////////////////////////////////////////////
@@ -1085,6 +1145,7 @@ void createMainMechainism()
 	sliderZ.create();
 	sliderZ.CalculateFacesNorm();
 }
+
 void createTshape()
 {
 	temp1.create();
@@ -1108,6 +1169,7 @@ void createTshape()
 	temp7.create_compensation(90);
 	temp7.CalculateFacesNorm();
 }
+
 void create_5bar()
 {
 	sup_5bar_1.create();
@@ -1121,6 +1183,7 @@ void create_5bar()
 	sup_5bar_5.create();
 	sup_5bar_5.CalculateFacesNorm();
 }
+
 void create_6bar()
 {
 	sup_6bar_1.create();
@@ -1136,6 +1199,7 @@ void create_6bar()
 	sup_6bar_6.create();
 	sup_6bar_6.CalculateFacesNorm();
 }
+
 void create_8bar()
 {
 	sup_8bar_1.create();
