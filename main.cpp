@@ -538,7 +538,7 @@ void addAdistance(float fMainWidth, float angle)
 void drawIsoscelesPolygon(int numVertices, float size, float fMainHeight)
 {
 	glBegin(GL_POLYGON);
-	glColor4f(1.0, 1, 1, 1.0);
+	glColor3f(1.0f, 0.0f, 0.0f);
 	for (int i = 0; i < numVertices; ++i)
 	{
 		float angle = 2.0f * M_PI * i / numVertices; // Calculate angle for each vertex
@@ -553,22 +553,29 @@ void drawIsoscelesPolygon(int numVertices, float size, float fMainHeight)
 		float angle = 2.0f * M_PI * i / numVertices; // Calculate angle for each vertex
 		float x = size * cos(angle);				 // Calculate x coordinate
 		float z = size * sin(angle);				 // Calculate z coordinate
-		glVertex3f(x, fMainHeight, z);
+		glVertex3f(x, fMainHeight / 2, z);
 	}
 	glEnd();
 }
 
 float calculateRadius(float fMainWidth, float angle)
 {
-	return fMainWidth / (2 * cos(DEG2RAD(angle / 2)));
+	return fMainWidth / (2 * sin(DEG2RAD(angle / 2)));
 }
 
 void draw_5bar()
 {
 	glPushMatrix();
-	drawIsoscelesPolygon(5, calculateRadius(1, 72), 1);
 	glTranslatef(20.0, 10, 20);
 	glRotatef(-90, 1, 0, 0);
+
+	{
+		glPushMatrix();
+		glRotatef(90, 0, 1, 0);
+		drawIsoscelesPolygon(5, calculateRadius(1, 72), 1);
+		glPopMatrix();
+	}
+
 	{
 		glPushMatrix();
 		addAdistance(1, 72);
@@ -586,7 +593,6 @@ void draw_5bar()
 		}
 		glPopMatrix();
 	}
-
 	{
 		glPushMatrix();
 
@@ -661,6 +667,12 @@ void draw_6bar()
 
 	glTranslatef(-20.0, 10, 20);
 	glRotatef(-90, 1, 0, 0);
+
+	{
+		glPushMatrix();
+		drawIsoscelesPolygon(6, calculateRadius(1, 60), 1);
+		glPopMatrix();
+	}
 	{
 		glPushMatrix();
 		addAdistance(1, 60);
@@ -763,6 +775,13 @@ void draw_8bar()
 
 	glTranslatef(20.0, 10, -20);
 	glRotatef(-90, 1, 0, 0);
+
+	{
+		glPushMatrix();
+		glRotatef(45 / 2, 0, 1, 0);
+		drawIsoscelesPolygon(8, calculateRadius(1, 45), 1);
+		glPopMatrix();
+	}
 	{
 		glPushMatrix();
 		addAdistance(1, 45);
