@@ -1,3 +1,8 @@
+/*
+	Bai tap lon Do hoa May Tinh - CO3059
+	Ho va ten SV: Nguyen Le Gia Hinh
+	MSSV: 2011213
+*/
 #include <math.h>
 #include <iostream>
 #include <windows.h>
