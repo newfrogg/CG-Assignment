@@ -277,7 +277,7 @@ public:
 		}
 		if (face != NULL)
 		{
-			delete[] face;
+			//delete[] face;
 		}
 		numVerts = 0;
 		numFaces = 0;
@@ -536,7 +536,6 @@ void Cylinder::create_compensation(float alpha)
 	float x, y, z;
 
 	pt[0].set(fRadius, fHeight / 2, fRadius);
-	// chi toi nsegment vi day la hinh cung kin (diem dau == diem cuoi)
 	for (i = 0; i < nSegment; i++)
 	{
 		x = fRadius * cos(fAngle * i);
@@ -592,7 +591,6 @@ void Cylinder::create_compensation(float alpha)
 		if (i < nSegment - 1)
 			face[idx].vert[2].vertIndex = i + 2 + nSegment;
 		else
-			// face[idx].vert[2].vertIndex = 1 + nSegment;
 			continue;
 		face[idx].vert[1].vertIndex = i + 1 + nSegment;
 		idx++;
@@ -2686,12 +2684,10 @@ int main(int argc, char* argv[])
 	//////  CREATE OBJECTS
 	////////////////////////////////////////////////////////////////////////
 	createMainMechainism();
-	// Issue appear here ?????
 	createTshape();
 	create_5bar();
 	create_6bar();
 	create_8bar();
-
 	// Init opengl environment
 	myInit();
 	// Function to display main presentation
