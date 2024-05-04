@@ -1,14 +1,16 @@
 #include <math.h>
 #include <iostream>
-#include <vector>
-#include <math.h>
+#include <windows.h>
 #include <GL/gl.h>
 #include <GL/glut.h>
+#include <cmath>
 
+#define M_PI 3.14
 #define DEG2RAD(x) (x * M_PI) / 180.0f
 #define PI 3.1415926
 #define COLORNUM 14
 
+using namespace std;
 // Support Class
 #pragma region
 class Point3
@@ -21,7 +23,7 @@ public:
 		y = dy;
 		z = dz;
 	}
-	void set(Point3 &p)
+	void set(Point3& p)
 	{
 		x = p.x;
 		y = p.y;
@@ -45,7 +47,7 @@ public:
 		g = green;
 		b = blue;
 	}
-	void set(Color3 &c)
+	void set(Color3& c)
 	{
 		r = c.r;
 		g = c.g;
@@ -166,7 +168,7 @@ public:
 		y = dy;
 		z = dz;
 	}
-	void set(Vector3 &v)
+	void set(Vector3& v)
 	{
 		x = v.x;
 		y = v.y;
@@ -186,7 +188,7 @@ public:
 		y = dy;
 		z = dz;
 	}
-	Vector3(Vector3 &v)
+	Vector3(Vector3& v)
 	{
 		x = v.x;
 		y = v.y;
@@ -230,7 +232,7 @@ class Face
 {
 public:
 	int nVerts;
-	VertexID *vert;
+	VertexID* vert;
 	Vector3 facenorm;
 
 	Face()
@@ -254,10 +256,10 @@ class Mesh
 public:
 	// number of vertices
 	int numVerts;
-	Point3 *pt;
+	Point3* pt;
 	// number of Faces
 	int numFaces;
-	Face *face;
+	Face* face;
 
 public:
 	Mesh()
@@ -284,141 +286,8 @@ public:
 	void DrawColor();
 	void CalculateFacesNorm();
 	void Draw();
-
-	void CreateTetrahedron();
-
-	void CreateCylinderModified(float center_x, float center_y, float center_z, int nSegment, float fHeight, float fRadius);
 };
-float ColorArr[COLORNUM][3] = {{1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, {0.0, 0.0, 1.0}, {1.0, 1.0, 0.0}, {1.0, 0.0, 1.0}, {0.0, 1.0, 1.0}, {0.3, 0.3, 0.3}, {0.5, 0.5, 0.5}, {0.9, 0.9, 0.9}, {1.0, 0.5, 0.5}, {0.5, 1.0, 0.5}, {0.5, 0.5, 1.0}, {0.0, 0.0, 0.0}, {1.0, 1.0, 1.0}};
-
-void Mesh::CreateCylinderModified(float center_x, float center_y, float center_z, int nSegment, float fHeight, float fRadius)
-{
-	////////////////////////////////////////////////////////////////////////
-	//////  COMMON SIZE PARAMETERS
-	////////////////////////////////////////////////////////////////////////
-	float __center_x = center_x;
-	float __center_y = center_y;
-	float __center_z = center_z;
-
-	numVerts = nSegment * 2 + 2;
-	pt = new Point3[numVerts];
-
-	int i;
-	int idx;
-	float fAngle = 2 * PI / nSegment;
-	float x, y, z;
-
-	pt[0].set(__center_x, fHeight / 2 + __center_y, __center_z);
-	// chi toi nsegment vi day la hinh cung kin (diem dau == diem cuoi)
-	for (i = 0; i < nSegment; i++)
-	{
-		x = fRadius * cos(fAngle * i) + __center_x;
-		z = fRadius * sin(fAngle * i) + __center_z;
-		y = fHeight / 2 + __center_y;
-		pt[i + 1].set(x, y, z);
-		// printf("x = %f, y = %f, z = %f \n", x, y, z);
-
-		y = -fHeight / 2 + __center_y;
-		// printf("x = %f, y = %f, z = %f \n", x, y, z);
-		pt[i + 1 + nSegment].set(x, y, z);
-	}
-	pt[numVerts - 1].set(__center_x, -fHeight / 2 + __center_y, __center_z);
-
-	numFaces = nSegment * 3;
-	face = new Face[numFaces];
-
-	idx = 0;
-	for (i = 0; i < nSegment; i++)
-	{
-		face[idx].nVerts = 3;
-		face[idx].vert = new VertexID[face[idx].nVerts];
-		face[idx].vert[0].vertIndex = 0;
-		if (i < nSegment - 1)
-			face[idx].vert[1].vertIndex = i + 2;
-		else
-			face[idx].vert[1].vertIndex = 1;
-		face[idx].vert[2].vertIndex = i + 1;
-		idx++;
-	}
-
-	for (i = 0; i < nSegment; i++)
-	{
-		face[idx].nVerts = 4;
-		face[idx].vert = new VertexID[face[idx].nVerts];
-
-		face[idx].vert[0].vertIndex = i + 1;
-		if (i < nSegment - 1)
-			face[idx].vert[1].vertIndex = i + 2;
-		else
-			face[idx].vert[1].vertIndex = 1;
-		face[idx].vert[2].vertIndex = face[idx].vert[1].vertIndex + nSegment;
-		face[idx].vert[3].vertIndex = face[idx].vert[0].vertIndex + nSegment;
-
-		idx++;
-	}
-
-	for (i = 0; i < nSegment; i++)
-	{
-		face[idx].nVerts = 3;
-		face[idx].vert = new VertexID[face[idx].nVerts];
-		face[idx].vert[0].vertIndex = numVerts - 1;
-		if (i < nSegment - 1)
-			face[idx].vert[2].vertIndex = i + 2 + nSegment;
-		else
-			face[idx].vert[2].vertIndex = 1 + nSegment;
-		face[idx].vert[1].vertIndex = i + 1 + nSegment;
-		idx++;
-	}
-	Mesh::CalculateFacesNorm();
-}
-
-void Mesh::CreateTetrahedron()
-{
-	int i;
-	numVerts = 4;
-	pt = new Point3[numVerts];
-	pt[0].set(0, 0, 0);
-	pt[1].set(1, 0, 0);
-	pt[2].set(0, 1, 0);
-	pt[3].set(0, 0, 1);
-
-	numFaces = 4;
-	face = new Face[numFaces];
-
-	face[0].nVerts = 3;
-	face[0].vert = new VertexID[face[0].nVerts];
-	face[0].vert[0].vertIndex = 1;
-	face[0].vert[1].vertIndex = 2;
-	face[0].vert[2].vertIndex = 3;
-	for (i = 0; i < face[0].nVerts; i++)
-		face[0].vert[i].colorIndex = 0;
-
-	face[1].nVerts = 3;
-	face[1].vert = new VertexID[face[1].nVerts];
-	face[1].vert[0].vertIndex = 0;
-	face[1].vert[1].vertIndex = 2;
-	face[1].vert[2].vertIndex = 1;
-	for (i = 0; i < face[1].nVerts; i++)
-		face[1].vert[i].colorIndex = 1;
-
-	face[2].nVerts = 3;
-	face[2].vert = new VertexID[face[2].nVerts];
-	face[2].vert[0].vertIndex = 0;
-	face[2].vert[1].vertIndex = 3;
-	face[2].vert[2].vertIndex = 2;
-	for (i = 0; i < face[2].nVerts; i++)
-		face[2].vert[i].colorIndex = 2;
-
-	face[3].nVerts = 3;
-	face[3].vert = new VertexID[face[3].nVerts];
-	face[3].vert[0].vertIndex = 1;
-	face[3].vert[1].vertIndex = 3;
-	face[3].vert[2].vertIndex = 0;
-	for (i = 0; i < face[3].nVerts; i++)
-		face[3].vert[i].colorIndex = 3;
-
-	Mesh::CalculateFacesNorm();
-}
+float ColorArr[COLORNUM][3] = { {1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, {0.0, 0.0, 1.0}, {1.0, 1.0, 0.0}, {1.0, 0.0, 1.0}, {0.0, 1.0, 1.0}, {0.3, 0.3, 0.3}, {0.5, 0.5, 0.5}, {0.9, 0.9, 0.9}, {1.0, 0.5, 0.5}, {0.5, 1.0, 0.5}, {0.5, 0.5, 1.0}, {0.0, 0.0, 0.0}, {1.0, 1.0, 1.0} };
 
 void Mesh::DrawWireframe()
 {
@@ -504,7 +373,7 @@ public:
 	int nSegment;
 	float fHeight;
 	float fRadius;
-	Cylinder(int nSegment, float fHeight, float fRadius) : nSegment(nSegment), fHeight(fHeight), fRadius(fRadius){};
+	Cylinder(int nSegment, float fHeight, float fRadius) : nSegment(nSegment), fHeight(fHeight), fRadius(fRadius) {};
 
 	void create();
 	void create_alpha(float alpha);
@@ -659,7 +528,7 @@ void Cylinder::create_alpha(float alpha)
 
 void Cylinder::create_compensation(float alpha)
 {
-	numVerts = (nSegment + 1) * 2 + 2;
+	numVerts = nSegment * 2 + 2;
 	pt = new Point3[numVerts];
 	int i;
 	int idx;
@@ -682,7 +551,7 @@ void Cylinder::create_compensation(float alpha)
 	}
 	pt[numVerts - 1].set(fRadius, -fHeight / 2, fRadius);
 
-	numFaces = nSegment * 3;
+	numFaces = (nSegment - 1) * 3;
 	face = new Face[numFaces];
 
 	idx = 0;
@@ -694,7 +563,6 @@ void Cylinder::create_compensation(float alpha)
 		if (i < nSegment - 1)
 			face[idx].vert[1].vertIndex = i + 2;
 		else
-			// face[idx].vert[1].vertIndex = 1;
 			continue;
 		face[idx].vert[2].vertIndex = i + 1;
 		idx++;
@@ -761,11 +629,10 @@ public:
 
 	Base(float fMainHeight, float fGrooveHeight, float fMainWidth, float fSubWidth, float fGrooveWidth, float fLength)
 		: fMainHeight(fMainHeight), fGrooveHeight(fGrooveHeight), fMainWidth(fMainWidth),
-		  fSubWidth(fSubWidth), fGrooveWidth(fGrooveWidth), fLength(fLength){};
+		fSubWidth(fSubWidth), fGrooveWidth(fGrooveWidth), fLength(fLength) {};
 
 	void create();
 	void Draw();
-	void CalculateFacesNorm();
 };
 void Base::create()
 {
@@ -1241,38 +1108,7 @@ void Base::Draw()
 	}
 }
 
-void Base::CalculateFacesNorm()
-{
-	float dx, dy, dz;
-	int idx, next;
-	for (int f = 0; f < numFaces; f++)
-	// for (int f = 0; f < 16; f++)
-	// for (int f = 16; f < 22; f++)
-	// for (int f = 16; f < 22 + 6; f++)
-	// for (int f = 16; f < 22 + 6*3; f++)
-	// for (int f = 0; f < 48; f++)
-	// for (int f = 40; f < 48; f++)
-	// for (int f = 52; f < +2 * 4; f++)
-	{
-		dx = 0;
-		dy = 0;
-		dz = 0;
-		for (int v = 0; v < face[f].nVerts; v++)
-		{
-			idx = v;
-			next = (idx + 1) % face[f].nVerts;
 
-			int p1 = face[f].vert[idx].vertIndex;
-			int p2 = face[f].vert[next].vertIndex;
-
-			dx = dx + (pt[p1].y - pt[p2].y) * (pt[p1].z + pt[p2].z);
-			dy = dy + (pt[p1].z - pt[p2].z) * (pt[p1].x + pt[p2].x);
-			dz = dz + (pt[p1].x - pt[p2].x) * (pt[p1].y + pt[p2].y);
-		}
-		face[f].facenorm.set(dx, dy, dz);
-		face[f].facenorm.normalize();
-	}
-}
 #pragma endregion
 // Bar
 #pragma region
@@ -1284,7 +1120,7 @@ public:
 	float fLongWidth;
 	float fLength;
 
-	Bar(float fHeight, float fShortWidth, float fLongWidth, float fLength) : fHeight(fHeight), fShortWidth(fShortWidth), fLongWidth(fLongWidth), fLength(fLength){};
+	Bar(float fHeight, float fShortWidth, float fLongWidth, float fLength) : fHeight(fHeight), fShortWidth(fShortWidth), fLongWidth(fLongWidth), fLength(fLength) {};
 	void create();
 	void Draw();
 };
@@ -1384,7 +1220,7 @@ class Cube : public Mesh
 {
 public:
 	float fSize;
-	Cube(float fSize) : fSize(fSize){};
+	Cube(float fSize) : fSize(fSize) {};
 	void create();
 	void Draw();
 };
@@ -1493,9 +1329,8 @@ public:
 	float fSubWidth;
 	float fLength;
 
-	PieceBar(float fHeight, float fMainWidth, float fSubWidth, float fLength) : fHeight(fHeight), fMainWidth(fMainWidth), fSubWidth(fSubWidth), fLength(fLength){};
+	PieceBar(float fHeight, float fMainWidth, float fSubWidth, float fLength) : fHeight(fHeight), fMainWidth(fMainWidth), fSubWidth(fSubWidth), fLength(fLength) {};
 	void create();
-	void CalculateFacesNorm();
 	void Draw();
 };
 void PieceBar::create()
@@ -1607,34 +1442,7 @@ void PieceBar::Draw()
 	}
 }
 
-void PieceBar::CalculateFacesNorm()
-{
-	float dx, dy, dz;
-	int idx, next;
-	for (int f = 0; f < numFaces; f++)
-	{
-		dx = 0;
-		dy = 0;
-		dz = 0;
-		for (int v = 0; v < face[f].nVerts; v++)
-		{
-			idx = v;
-			next = (idx + 1) % face[f].nVerts;
-
-			int p1 = face[f].vert[idx].vertIndex;
-			int p2 = face[f].vert[next].vertIndex;
-
-			dx = dx + (pt[p1].y - pt[p2].y) * (pt[p1].z + pt[p2].z);
-			dy = dy + (pt[p1].z - pt[p2].z) * (pt[p1].x + pt[p2].x);
-			dz = dz + (pt[p1].x - pt[p2].x) * (pt[p1].y + pt[p2].y);
-		}
-		face[f].facenorm.set(dx, dy, dz);
-		face[f].facenorm.normalize();
-	}
-}
 #pragma endregion
-
-using namespace std;
 
 enum colorMode
 {
@@ -1759,8 +1567,8 @@ void drawAxis()
 }
 
 void setMaterial(float ar, float ag, float ab,
-				 float dr, float dg, float db,
-				 float sr, float sg, float sb)
+	float dr, float dg, float db,
+	float sr, float sg, float sb)
 {
 	GLfloat ambient[4];
 	GLfloat diffuse[4];
@@ -1791,10 +1599,10 @@ void setLight()
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_NORMALIZE);
 
-	const GLfloat leftLightAmbColor[] = {0.1f, 0.1f, 0.1f, 1.0f};
-	const GLfloat leftLightSpecColor[] = {0.0f, 0.0f, 0.0f, 1.0f};
-	const GLfloat leftLightDiffColor[] = {1.0f, 1.0f, 0.0f, 1.0f};
-	const GLfloat leftLightPos[] = {-5.0, -5.0, -5.0, 0.0};
+	const GLfloat leftLightAmbColor[] = { 0.1f, 0.1f, 0.1f, 1.0f };
+	const GLfloat leftLightSpecColor[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+	const GLfloat leftLightDiffColor[] = { 1.0f, 1.0f, 0.0f, 1.0f };
+	const GLfloat leftLightPos[] = { -5.0, -5.0, -5.0, 0.0 };
 
 	// set up left light
 	glLightfv(GL_LIGHT1, GL_POSITION, leftLightPos);
@@ -1919,8 +1727,8 @@ void drawMainbar()
 	if (e_colorMode == Colored)
 	{
 		setMaterial(1, 0, 0,
-					1.0, 0.0, 0.0,
-					1.0, 1.0, 1.0);
+			1.0, 0.0, 0.0,
+			1.0, 1.0, 1.0);
 		crossbase.Draw();
 	}
 	else
@@ -1941,8 +1749,8 @@ void drawTiebar()
 	if (e_colorMode == Colored)
 	{
 		setMaterial(0, 1, 0,
-					0.0, 0.0, 0.0,
-					1.0, 1.0, 1.0);
+			0.0, 0.0, 0.0,
+			1.0, 1.0, 1.0);
 		tiebar.Draw();
 	}
 	else
@@ -1960,8 +1768,8 @@ void draw_3_latch()
 	if (e_colorMode == Colored)
 	{
 		setMaterial(1, 1, 0,
-					1.0, 1.0, 0.0,
-					1.0, 1.0, 1.0);
+			1.0, 1.0, 0.0,
+			1.0, 1.0, 1.0);
 		latchCylinderX.Draw();
 	}
 	else
@@ -2007,8 +1815,8 @@ void draw_2_slider()
 	if (e_colorMode == Colored)
 	{
 		setMaterial(0, 0, 1,
-					0.0, 0.0, 0.0,
-					1.0, 1.0, 1.0);
+			0.0, 0.0, 0.0,
+			1.0, 1.0, 1.0);
 		sliderX.Draw();
 	}
 	else
@@ -2066,8 +1874,8 @@ void drawTshape()
 	if (e_colorMode == Colored)
 	{
 		setMaterial(1, 0, 0,
-					0.0, 0.0, 0.0,
-					1.0, 1.0, 1.0);
+			0.0, 0.0, 0.0,
+			1.0, 1.0, 1.0);
 		temp1.Draw();
 	}
 	else
@@ -2206,8 +2014,8 @@ void draw_5bar()
 		if (e_colorMode == Colored)
 		{
 			setMaterial(1, 0, 0,
-						0.0, 0.0, 0.0,
-						1.0, 1.0, 1.0);
+				0.0, 0.0, 0.0,
+				1.0, 1.0, 1.0);
 			sup_5bar_1.Draw();
 		}
 		else
@@ -2303,8 +2111,8 @@ void draw_6bar()
 		if (e_colorMode == Colored)
 		{
 			setMaterial(1, 0, 0,
-						0.0, 0.0, 0.0,
-						1.0, 1.0, 1.0);
+				0.0, 0.0, 0.0,
+				1.0, 1.0, 1.0);
 			sup_6bar_1.Draw();
 		}
 		else
@@ -2411,8 +2219,8 @@ void draw_8bar()
 		if (e_colorMode == Colored)
 		{
 			setMaterial(1, 0, 0,
-						0.0, 0.0, 0.0,
-						1.0, 1.0, 1.0);
+				0.0, 0.0, 0.0,
+				1.0, 1.0, 1.0);
 			sup_8bar_1.Draw();
 		}
 		else
@@ -2863,21 +2671,22 @@ void create_8bar()
 	sup_8bar_8.CalculateFacesNorm();
 }
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
 	// Display instruction to control the application
 	showInstructions();
 	// Opengl Main display program
-	glutInit(&argc, (char **)argv);							  // initialize the tool kit
+	glutInit(&argc, (char**)argv);							  // initialize the tool kit
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH); // set the display mode
 	glutInitWindowSize(screenWidth, screenHeight);			  // set window size
 	glutInitWindowPosition(100, 100);						  // set window position on screen
-	glutCreateWindow("Nguyen Le Gia Hinh - 2011213");		  // open the screen window
+	glutCreateWindow("Computer Graphic Assignment - Nguyen Le Gia Hinh - 2011213");		  // open the screen window
 
 	////////////////////////////////////////////////////////////////////////
 	//////  CREATE OBJECTS
 	////////////////////////////////////////////////////////////////////////
 	createMainMechainism();
+	// Issue appear here ?????
 	createTshape();
 	create_5bar();
 	create_6bar();
