@@ -149,7 +149,7 @@ void Cylinder::create_alpha(float alpha)
 
 void Cylinder::create_compensation(float alpha)
 {
-    numVerts = (nSegment + 1) * 2 + 2;
+    numVerts = nSegment * 2 + 2;
     pt = new Point3[numVerts];
     int i;
     int idx;
@@ -172,7 +172,7 @@ void Cylinder::create_compensation(float alpha)
     }
     pt[numVerts - 1].set(fRadius, -fHeight / 2, fRadius);
 
-    numFaces = nSegment * 3;
+    numFaces = (nSegment - 1) * 3;
     face = new Face[numFaces];
 
     idx = 0;
@@ -184,7 +184,6 @@ void Cylinder::create_compensation(float alpha)
         if (i < nSegment - 1)
             face[idx].vert[1].vertIndex = i + 2;
         else
-            // face[idx].vert[1].vertIndex = 1;
             continue;
         face[idx].vert[2].vertIndex = i + 1;
         idx++;
@@ -214,7 +213,6 @@ void Cylinder::create_compensation(float alpha)
         if (i < nSegment - 1)
             face[idx].vert[2].vertIndex = i + 2 + nSegment;
         else
-            // face[idx].vert[2].vertIndex = 1 + nSegment;
             continue;
         face[idx].vert[1].vertIndex = i + 1 + nSegment;
         idx++;
